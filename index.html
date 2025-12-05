@@ -2,12 +2,15 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>کارساز - پلتفرم کاریابی هوشمند</title>
     <meta name="description" content="کارساز - پلتفرم کاریابی powered by AI با قابلیت‌های هوشمند برای یافتن بهترین فرصت‌های شغلی">
     
-    <!-- PWA Meta Tags -->
+    <!-- PWA & Meta -->
     <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="کارساز">
     <link rel="manifest" href='data:application/json;{"name":"کارساز","short_name":"کارساز","start_url":"/","display":"standalone","background_color":"#1f2937","theme_color":"#4f46e5","lang":"fa"}'>
     
     <!-- Fonts & Icons -->
@@ -21,7 +24,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        'vazir': ['Vazir', 'sans-serif'],
+                        'vazir': ['Vazir', 'ui-sans-serif', 'system-ui'],
                     },
                     colors: {
                         primary: {
@@ -31,30 +34,46 @@
                             700: '#4338ca',
                             900: '#1e3a8a'
                         }
+                    },
+                    screens: {
+                        'xs': '475px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
                     }
                 }
             },
-            darkMode: 'class'
+            darkMode: 'class',
+            corePlugins: {
+                preflight: true,
+            }
         }
     </script>
     
     <style>
+        /* Custom CSS for better mobile experience */
         * {
-            font-family: 'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         body {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
         .dark body {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
         }
         
+        /* Glassmorphism effect */
         .glass-effect {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
@@ -63,6 +82,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
+        /* Animations */
         .job-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -85,13 +105,13 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .pulse-animation {
-            animation: pulse 2s infinite;
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         .floating {
@@ -110,6 +130,7 @@
             background-clip: text;
         }
         
+        /* Loading spinner */
         .loading-spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #4f46e5;
@@ -124,77 +145,90 @@
             100% { transform: rotate(360deg); }
         }
         
-        .slide-in {
-            animation: slideIn 0.3s ease-out;
+        /* Responsive utilities */
+        @media (max-width: 640px) {
+            .text-6xl { font-size: 2.5rem; }
+            .text-2xl { font-size: 1.5rem; }
         }
         
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
-<body class="font-vazir">
+<body class="font-vazir antialiased">
     <!-- Header -->
     <header class="sticky top-0 z-50 glass-effect backdrop-blur-lg">
-        <nav class="container mx-auto px-4 py-4">
+        <nav class="container mx-auto px-4 py-3">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                <div class="flex items-center space-x-3 rtl:space-x-reverse">
                     <div class="text-2xl font-bold gradient-text">کارساز</div>
-                    <span class="text-sm text-gray-500">AI-Powered</span>
+                    <span class="hidden sm:inline text-xs text-gray-500">AI-Powered</span>
                 </div>
                 
+                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6 rtl:space-x-reverse">
-                    <a href="#jobs" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition">فرصت‌های شغلی</a>
-                    <a href="#dashboard" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition">داشبورد</a>
-                    <a href="#features" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition">ویژگی‌ها</a>
-                    <button class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
-                        ورود/ثبت‌نام
+                    <a href="#jobs" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2">فرصت‌ها</a>
+                    <a href="#dashboard" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2">داشبورد</a>
+                    <button onclick="showResumeModal()" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition whitespace-nowrap">
+                        <i class="fas fa-upload ml-1"></i>آپلود رزومه
                     </button>
-                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 transition">
+                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 transition" aria-label="Toggle dark mode">
                         <i class="fas fa-moon dark:hidden"></i>
                         <i class="fas fa-sun hidden dark:inline"></i>
                     </button>
                 </div>
                 
-                <button class="md:hidden p-2" id="mobileMenuBtn">
-                    <i class="fas fa-bars text-xl"></i>
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2" id="mobileMenuBtn" aria-label="Open menu">
+                    <i class="fas fa-bars text-xl text-gray-700 dark:text-gray-300"></i>
                 </button>
             </div>
             
-            <!-- Mobile Menu -->
-            <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-3">
-                <a href="#jobs" class="block text-gray-700 dark:text-gray-300 hover:text-primary-600 transition">فرصت‌های شغلی</a>
-                <a href="#dashboard" class="block text-gray-700 dark:text-gray-300 hover:text-primary-600 transition">داشبورد</a>
-                <a href="#features" class="block text-gray-700 dark:text-gray-300 hover:text-primary-600 transition">ویژگی‌ها</a>
-                <button class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition w-full">
-                    ورود/ثبت‌نام
+            <!-- Mobile Menu (Dropdown) -->
+            <div id="mobileMenu" class="hidden md:hidden mt-3 space-y-2 animate-[slideDown_0.3s_ease-out]">
+                <a href="#jobs" class="block text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">فرصت‌های شغلی</a>
+                <a href="#dashboard" class="block text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">داشبورد</a>
+                <button onclick="showResumeModal()" class="w-full text-right bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+                    <i class="fas fa-upload ml-1"></i>آپلود رزومه
+                </button>
+                <button id="mobileDarkModeToggle" class="w-full text-right p-2 rounded-lg bg-gray-200 dark:bg-gray-700 transition" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon dark:hidden ml-1"></i>
+                    <i class="fas fa-sun hidden dark:inline ml-1"></i>
+                    تم تاریک/روشن
                 </button>
             </div>
         </nav>
     </header>
 
     <!-- Hero Section -->
-    <section class="container mx-auto px-4 py-12 md:py-20">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 floating">
-                <span class="gradient-text">فرصت شغلی رویایی</span> خود را پیدا کنید
+    <section class="container mx-auto px-4 py-8 md:py-20">
+        <div class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-6xl font-bold mb-4 md:mb-6 floating">
+                <span class="gradient-text">فرصت شغلی رویایی</span><br class="hidden md:block"> خود را پیدا کنید
             </h1>
-            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+            <p class="text-base md:text-xl text-gray-600 dark:text-gray-400 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed">
                 با قدرت هوش مصنوعی، بهترین فرصت‌های شغلی متناسب با مهارت و شخصیت شما
             </p>
             
-            <!-- Search Bar -->
+            <!-- Search Bar - Responsive -->
             <div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-2 md:p-4">
-                <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex flex-col md:flex-row gap-3 md:gap-4">
                     <div class="flex-1 relative">
-                        <i class="fas fa-search absolute right-4 top-4 text-gray-400"></i>
+                        <i class="fas fa-search absolute right-3 top-3 md:top-4 text-gray-400 text-sm md:text-base"></i>
                         <input type="text" id="searchInput" placeholder="جستجوی عنوان شغلی یا مهارت..." 
-                               class="w-full pr-10 pl-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500">
+                               class="w-full pr-9 pl-3 md:pr-10 md:pl-4 py-2 md:py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base"
+                               aria-label="Search jobs">
                     </div>
                     <div class="flex-1 relative">
-                        <i class="fas fa-map-marker-alt absolute right-4 top-4 text-gray-400"></i>
-                        <select id="locationFilter" class="w-full pr-10 pl-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500">
+                        <i class="fas fa-map-marker-alt absolute right-3 top-3 md:top-4 text-gray-400 text-sm md:text-base"></i>
+                        <select id="locationFilter" class="w-full pr-9 pl-3 md:pr-10 md:pl-4 py-2 md:py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base"
+                                aria-label="Filter by location">
                             <option value="">همه شهرها</option>
                             <option>تهران</option>
                             <option>اصفهان</option>
@@ -202,72 +236,75 @@
                             <option>شیراز</option>
                         </select>
                     </div>
-                    <button onclick="searchJobs()" class="bg-primary-600 text-white px-8 py-3 rounded-lg hover:bg-primary-700 transition">
+                    <button onclick="searchJobs()" class="bg-primary-600 text-white px-4 md:px-8 py-2 md:py-3 rounded-lg hover:bg-primary-700 transition text-sm md:text-base whitespace-nowrap"
+                            aria-label="Search">
                         جستجو
                     </button>
                 </div>
             </div>
         </div>
         
-        <!-- Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
-            <div class="text-center glass-effect p-6 rounded-xl">
-                <div class="text-3xl font-bold text-primary-600">۲۳۴۰</div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">فرصت شغلی</div>
+        <!-- Stats - Grid Responsive -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mt-6 md:mt-12">
+            <div class="text-center glass-effect p-4 md:p-6 rounded-xl">
+                <div class="text-2xl md:text-3xl font-bold text-primary-600">۲۳۴۰</div>
+                <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400">فرصت شغلی</div>
             </div>
-            <div class="text-center glass-effect p-6 rounded-xl">
-                <div class="text-3xl font-bold text-primary-600">۵۶۰</div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">شرکت فعال</div>
+            <div class="text-center glass-effect p-4 md:p-6 rounded-xl">
+                <div class="text-2xl md:text-3xl font-bold text-primary-600">۵۶۰</div>
+                <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400">شرکت فعال</div>
             </div>
-            <div class="text-center glass-effect p-6 rounded-xl">
-                <div class="text-3xl font-bold text-primary-600">۸۹٪</div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">نرخ موفقیت</div>
+            <div class="text-center glass-effect p-4 md:p-6 rounded-xl">
+                <div class="text-2xl md:text-3xl font-bold text-primary-600">۸۹٪</div>
+                <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400">نرخ موفقیت</div>
             </div>
-            <div class="text-center glass-effect p-6 rounded-xl">
-                <div class="text-3xl font-bold text-primary-600">۴۸h</div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">زمان استخدام</div>
+            <div class="text-center glass-effect p-4 md:p-6 rounded-xl">
+                <div class="text-2xl md:text-3xl font-bold text-primary-600">۴۸h</div>
+                <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400">زمان استخدام</div>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
-    <section id="features" class="py-16 bg-gray-50 dark:bg-gray-900">
+    <!-- Features Section -->
+    <section id="features" class="py-12 md:py-16 bg-gray-50 dark:bg-gray-900">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">ویژگی‌های هوشمند کارساز</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg job-card">
-                    <div class="text-5xl mb-4">🤖</div>
-                    <h3 class="text-xl font-bold mb-3">تطبیق هوشمند</h3>
-                    <p class="text-gray-600 dark:text-gray-400">AI فرصت‌های شغلی متناسب با مهارت و شخصیت شما را پیدا می‌کند</p>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 gradient-text">ویژگی‌های هوشمند کارساز</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+                <div class="text-center p-4 md:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg job-card">
+                    <div class="text-4xl md:text-5xl mb-3 md:mb-4">🤖</div>
+                    <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">تطبیق هوشمند</h3>
+                    <p class="text-sm md:text-base text-gray-600 dark:text-gray-400">AI فرصت‌های شغلی متناسب با مهارت و شخصیت شما را پیدا می‌کند</p>
                 </div>
-                <div class="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg job-card">
-                    <div class="text-5xl mb-4">📄</div>
-                    <h3 class="text-xl font-bold mb-3">تحلیل رزومه</h3>
-                    <p class="text-gray-600 dark:text-gray-400">تحلیل هوشمند رزومه و پیشنهاد بهبود برای افزایش شانس استخدام</p>
+                <div class="text-center p-4 md:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg job-card">
+                    <div class="text-4xl md:text-5xl mb-3 md:mb-4">📄</div>
+                    <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">تحلیل رزومه</h3>
+                    <p class="text-sm md:text-base text-gray-600 dark:text-gray-400">تحلیل هوشمند رزومه و پیشنهاد بهبود برای افزایش شانس استخدام</p>
                 </div>
-                <div class="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg job-card">
-                    <div class="text-5xl mb-4">🎯</div>
-                    <h3 class="text-xl font-bold mb-3">مسیر شغلی</h3>
-                    <p class="text-gray-600 dark:text-gray-400">برنامه‌ریزی حرفه‌ای با پیشنهاد مسیرهای رشد شخصی‌سازی شده</p>
+                <div class="text-center p-4 md:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg job-card">
+                    <div class="text-4xl md:text-5xl mb-3 md:mb-4">🎯</div>
+                    <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">مسیر شغلی</h3>
+                    <p class="text-sm md:text-base text-gray-600 dark:text-gray-400">برنامه‌ریزی حرفه‌ای با پیشنهاد مسیرهای رشد شخصی‌سازی شده</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Jobs Section -->
-    <section id="jobs" class="py-16">
+    <section id="jobs" class="py-12 md:py-16">
         <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold gradient-text">فرصت‌های شغلی پیشنهادی</h2>
-                <div class="flex gap-4">
-                    <select id="categoryFilter" class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
+                <h2 class="text-2xl md:text-3xl font-bold gradient-text">فرصت‌های شغلی پیشنهادی</h2>
+                <div class="flex flex-wrap gap-2 md:gap-4 w-full md:w-auto">
+                    <select id="categoryFilter" class="flex-1 md:flex-none px-3 md:px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm md:text-base"
+                            aria-label="Filter by category">
                         <option value="">همه دسته‌بندی‌ها</option>
                         <option>توسعه نرم‌افزار</option>
                         <option>طراحی UI/UX</option>
                         <option>بازاریابی</option>
                         <option>مدیریت</option>
                     </select>
-                    <select id="typeFilter" class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
+                    <select id="typeFilter" class="flex-1 md:flex-none px-3 md:px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm md:text-base"
+                            aria-label="Filter by type">
                         <option value="">همه نوع‌ها</option>
                         <option>تمام‌وقت</option>
                         <option>پاره‌وقت</option>
@@ -277,58 +314,60 @@
                 </div>
             </div>
             
-            <div id="jobsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="jobsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 <!-- Job cards will be loaded here -->
             </div>
             
-            <div id="loadingSpinner" class="flex justify-center mt-8 hidden">
+            <div id="loadingSpinner" class="flex justify-center mt-6 md:mt-8 hidden">
                 <div class="loading-spinner"></div>
             </div>
         </div>
     </section>
 
-    <!-- Dashboard -->
-    <section id="dashboard" class="hidden py-16 bg-gray-50 dark:bg-gray-900">
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="hidden py-12 md:py-16 bg-gray-50 dark:bg-gray-900">
         <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Sidebar -->
                 <div class="md:col-span-1">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-                        <div class="text-center mb-6">
-                            <div class="w-24 h-24 bg-primary-100 dark:bg-primary-900 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                <i class="fas fa-user text-4xl text-primary-600"></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-lg sticky top-24">
+                        <div class="text-center mb-4 md:mb-6">
+                            <div class="w-20 h-20 md:w-24 md:h-24 bg-primary-100 dark:bg-primary-900 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                <i class="fas fa-user text-3xl md:text-4xl text-primary-600"></i>
                             </div>
-                            <h3 class="font-bold">کاربر مهمان</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">کارجو</p>
+                            <h3 class="font-bold text-base md:text-lg">کاربر مهمان</h3>
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">کارجو</p>
                         </div>
-                        <div class="space-y-3">
-                            <button class="w-full text-right p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                                <i class="fas fa-briefcase ml-2"></i>درخواست‌های من
+                        <div class="space-y-2">
+                            <button class="w-full text-right p-2 md:p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition text-sm md:text-base">
+                                <i class="fas fa-briefcase ml-2 text-primary-600"></i>درخواست‌های من
                             </button>
-                            <button class="w-full text-right p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                                <i class="fas fa-heart ml-2"></i>علاقه‌مندی‌ها
+                            <button class="w-full text-right p-2 md:p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition text-sm md:text-base">
+                                <i class="fas fa-heart ml-2 text-red-500"></i>علاقه‌مندی‌ها
                             </button>
-                            <button class="w-full text-right p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                                <i class="fas fa-upload ml-2"></i>رزومه من
+                            <button onclick="showResumeModal()" class="w-full text-right p-2 md:p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition text-sm md:text-base">
+                                <i class="fas fa-upload ml-2 text-green-600"></i>رزومه من
                             </button>
-                            <button class="w-full text-right p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                                <i class="fas fa-award ml-2"></i>آزمون‌های من
+                            <button class="w-full text-right p-2 md:p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition text-sm md:text-base">
+                                <i class="fas fa-award ml-2 text-yellow-600"></i>آزمون‌های من
                             </button>
                         </div>
                     </div>
                 </div>
                 
+                <!-- Main Content -->
                 <div class="md:col-span-3">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-                        <h3 class="text-xl font-bold mb-6">درخواست‌های اخیر</h3>
-                        <div class="space-y-4">
-                            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex justify-between items-center">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-lg">
+                        <h3 class="text-lg md:text-xl font-bold mb-4 md:mb-6">درخواست‌های اخیر</h3>
+                        <div class="space-y-3 md:space-y-4" id="recentApplications">
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-3 md:p-4 flex flex-col md:flex-row justify-between md:items-center gap-3">
                                 <div>
-                                    <h4 class="font-bold">توسعه‌دهنده Full Stack</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">شرکت فناوری اطلاعات سپهر</p>
+                                    <h4 class="font-bold text-sm md:text-base">توسعه‌دهنده Full Stack</h4>
+                                    <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">شرکت فناوری اطلاعات سپهر</p>
                                 </div>
-                                <div class="flex items-center gap-4">
-                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">در انتظار</span>
-                                    <button class="text-gray-400 hover:text-red-500">
+                                <div class="flex items-center gap-2 md:gap-4">
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs md:text-sm">در انتظار</span>
+                                    <button class="text-gray-400 hover:text-red-500 text-sm md:text-base" aria-label="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -341,22 +380,23 @@
     </section>
 
     <!-- Resume Upload Modal -->
-    <div id="resumeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 slide-in">
-            <h3 class="text-2xl font-bold mb-6 text-center">آپلود رزومه</h3>
-            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-primary-500 transition">
-                <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">فایل رزومه خود را اینجا رها کنید یا کلیک کنید</p>
-                <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" class="hidden">
-                <button onclick="document.getElementById('resumeFile').click()" class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition">
+    <div id="resumeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 max-w-md w-full slide-in">
+            <h3 class="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center">آپلود رزومه</h3>
+            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 md:p-8 text-center hover:border-primary-500 transition cursor-pointer"
+                 onclick="document.getElementById('resumeFile').click()">
+                <i class="fas fa-cloud-upload-alt text-4xl md:text-5xl text-gray-400 mb-3 md:mb-4"></i>
+                <p class="text-gray-600 dark:text-gray-400 mb-3 md:mb-4 text-sm md:text-base">فایل رزومه خود را اینجا رها کنید یا کلیک کنید</p>
+                <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" class="hidden" aria-label="Upload resume">
+                <button class="bg-primary-600 text-white px-4 md:px-6 py-2 rounded-lg hover:bg-primary-700 transition text-sm md:text-base">
                     انتخاب فایل
                 </button>
             </div>
-            <div class="mt-6 flex gap-4">
-                <button onclick="closeResumeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-2 rounded-lg hover:bg-gray-300 transition">
+            <div class="mt-4 md:mt-6 flex gap-3">
+                <button onclick="closeResumeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-2 rounded-lg hover:bg-gray-300 transition text-sm md:text-base">
                     انصراف
                 </button>
-                <button onclick="uploadResume()" class="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition">
+                <button onclick="uploadResume()" class="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition text-sm md:text-base">
                     آپلود
                 </button>
             </div>
@@ -365,20 +405,20 @@
 
     <!-- Job Detail Modal -->
     <div id="jobDetailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-4xl w-full slide-in">
-                <div class="flex justify-between items-start mb-6">
-                    <h3 id="modalJobTitle" class="text-2xl font-bold"></h3>
-                    <button onclick="closeJobModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+        <div class="flex items-center justify-center min-h-screen p-2 md:p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 md:p-8 max-w-4xl w-full slide-in mx-2">
+                <div class="flex justify-between items-start mb-4 md:mb-6">
+                    <h3 id="modalJobTitle" class="text-lg md:text-2xl font-bold pr-8 md:pr-0"></h3>
+                    <button onclick="closeJobModal()" class="text-gray-400 hover:text-gray-600 text-xl md:text-2xl" aria-label="Close">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div id="modalJobContent"></div>
-                <div class="mt-8 flex gap-4">
-                    <button onclick="applyForJob()" class="flex-1 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
+                <div id="modalJobContent" class="text-sm md:text-base"></div>
+                <div class="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3">
+                    <button onclick="applyForJob()" class="flex-1 bg-primary-600 text-white px-4 md:px-6 py-3 rounded-lg hover:bg-primary-700 transition text-sm md:text-base">
                         اقدام برای شغل
                     </button>
-                    <button onclick="toggleFavorite()" id="favoriteBtn" class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <button onclick="toggleFavoriteJob(currentJob.id)" id="favoriteBtn" class="px-4 md:px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm md:text-base">
                         <i class="far fa-heart"></i> ذخیره
                     </button>
                 </div>
@@ -387,42 +427,42 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
+    <footer class="bg-gray-900 text-white py-8 md:py-12">
         <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-4 gap-8">
-                <div>
-                    <h4 class="text-xl font-bold mb-4 gradient-text">کارساز</h4>
-                    <p class="text-gray-400">بهترین پلتفرم کاریابی هوشمند در ایران</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
+                <div class="col-span-1">
+                    <h4 class="text-lg md:text-xl font-bold mb-3 md:mb-4 gradient-text">کارساز</h4>
+                    <p class="text-gray-400 text-sm md:text-base">بهترین پلتفرم کاریابی هوشمند در ایران</p>
                 </div>
                 <div>
-                    <h5 class="font-bold mb-4">لینک‌های مفید</h5>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">فرصت‌های شغلی</a></li>
-                        <li><a href="#" class="hover:text-white transition">شرکت‌ها</a></li>
-                        <li><a href="#" class="hover:text-white transition">بلاگ</a></li>
+                    <h5 class="font-bold mb-3 md:mb-4 text-sm md:text-base">لینک‌های مفید</h5>
+                    <ul class="space-y-2 text-sm md:text-base">
+                        <li><a href="#jobs" class="text-gray-400 hover:text-white transition">فرصت‌های شغلی</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">شرکت‌ها</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">بلاگ</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5 class="font-bold mb-4">پشتیبانی</h5>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">تماس با ما</a></li>
-                        <li><a href="#" class="hover:text-white transition">سوالات متداول</a></li>
-                        <li><a href="#" class="hover:text-white transition">قوانین و مقررات</a></li>
+                    <h5 class="font-bold mb-3 md:mb-4 text-sm md:text-base">پشتیبانی</h5>
+                    <ul class="space-y-2 text-sm md:text-base">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">تماس با ما</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">سوالات متداول</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">قوانین و مقررات</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5 class="font-bold mb-4">خبرنامه</h5>
-                    <p class="text-gray-400 mb-4">آخرین فرصت‌های شغلی را دریافت کنید</p>
-                    <div class="flex">
-                        <input type="email" placeholder="ایمیل شما" class="px-4 py-2 rounded-l-lg bg-gray-800 text-white flex-1">
-                        <button class="bg-primary-600 px-4 py-2 rounded-r-lg hover:bg-primary-700 transition">
+                    <h5 class="font-bold mb-3 md:mb-4 text-sm md:text-base">خبرنامه</h5>
+                    <p class="text-gray-400 mb-3 md:mb-4 text-sm md:text-base">آخرین فرصت‌ها را دریافت کنید</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="ایمیل شما" class="flex-1 px-3 py-2 rounded-lg bg-gray-800 text-white text-sm" aria-label="Subscribe newsletter">
+                        <button class="bg-primary-600 px-3 py-2 rounded-lg hover:bg-primary-700 transition" aria-label="Send">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2024 کارساز. تمامی حقوق محفوظ است.</p>
+            <div class="border-t border-gray-800 mt-6 md:mt-8 pt-4 md:pt-6 text-center text-gray-400 text-xs md:text-sm">
+                <p>&copy; 2024 کارساز. تمامی حقوق محفوظ است. | طراحی شده با <i class="fas fa-heart text-red-500"></i></p>
             </div>
         </div>
     </footer>
@@ -438,8 +478,8 @@
                 type: "تمام‌وقت",
                 category: "توسعه نرم‌افزار",
                 salary: "۱۵-۲۰ میلیون تومان",
-                description: "به یک توسعه‌دهنده Full Stack با حداقل ۳ سال تجربه کار با React و Node.js نیازمندیم...",
-                requirements: ["React", "Node.js", "MongoDB", "TypeScript"],
+                description: "به یک توسعه‌دهنده Full Stack با حداقل ۳ سال تجربه کار با React و Node.js نیازمندیم. این موقعیت شغلی فرصتی عالی برای کار در پروژه‌های جذاب و چالش‌برانگیز است.",
+                requirements: ["React", "Node.js", "MongoDB", "TypeScript", "Git", "AWS"],
                 posted: "۲ روز پیش",
                 logo: "fa-building",
                 match: 95
@@ -452,8 +492,8 @@
                 type: "دورکاری",
                 category: "طراحی UI/UX",
                 salary: "۱۸-۲۵ میلیون تومان",
-                description: "به دنبال طراح خلاق و با تجربه برای طراحی رابط کاربری و تجربه کاربری محصولات...",
-                requirements: ["Figma", "Adobe XD", "Sketch", "Principle"],
+                description: "به دنبال طراح خلاق و با تجربه برای طراحی رابط کاربری و تجربه کاربری محصولات دیجیتال هستیم.",
+                requirements: ["Figma", "Adobe XD", "Sketch", "Principle", "User Research"],
                 posted: "۳ روز پیش",
                 logo: "fa-palette",
                 match: 88
@@ -466,8 +506,8 @@
                 type: "تمام‌وقت",
                 category: "بازاریابی",
                 salary: "۱۲-۱۶ میلیون تومان",
-                description: "مدیریت کمپین‌های تبلیغاتی دیجیتال، بهینه‌سازی SEO/SEM و آنالیز داده‌ها...",
-                requirements: ["Google Ads", "SEO", "Analytics", "Social Media"],
+                description: "مدیریت کمپین‌های تبلیغاتی دیجیتال، بهینه‌سازی SEO/SEM و آنالیز داده‌ها.",
+                requirements: ["Google Ads", "SEO", "Analytics", "Social Media", "Content Marketing"],
                 posted: "۵ روز پیش",
                 logo: "fa-bullhorn",
                 match: 82
@@ -480,8 +520,8 @@
                 type: "تمام‌وقت",
                 category: "مدیریت",
                 salary: "۳۰-۴۰ میلیون تومان",
-                description: "مدیریت توسعه محصولات فناوری، تحلیل بازار و تعیین استراتژی محصول...",
-                requirements: ["Product Strategy", "Agile", "Data Analysis", "Leadership"],
+                description: "مدیریت توسعه محصولات فناوری، تحلیل بازار و تعیین استراتژی محصول.",
+                requirements: ["Product Strategy", "Agile", "Data Analysis", "Leadership", "Scrum"],
                 posted: "۱ هفته پیش",
                 logo: "fa-rocket",
                 match: 91
@@ -494,8 +534,8 @@
                 type: "پروژه‌ای",
                 category: "توسعه نرم‌افزار",
                 salary: "پروژه‌ای",
-                description: "توسعه اپلیکیشن‌های موبایل کراس‌پلتفرم با استفاده از Flutter...",
-                requirements: ["Flutter", "Dart", "Firebase", "REST API"],
+                description: "توسعه اپلیکیشن‌های موبایل کراس‌پلتفرم با استفاده از Flutter.",
+                requirements: ["Flutter", "Dart", "Firebase", "REST API", "Git"],
                 posted: "۴ روز پیش",
                 logo: "fa-mobile-alt",
                 match: 86
@@ -508,8 +548,8 @@
                 type: "پاره‌وقت",
                 category: "توسعه نرم‌افزار",
                 salary: "۱۴-۱۸ میلیون تومان",
-                description: "تحلیل داده‌های تجاری، ساخت داشبورد و گزارش‌های هوش تجاری...",
-                requirements: ["Python", "SQL", "Power BI", "Machine Learning"],
+                description: "تحلیل داده‌های تجاری، ساخت داشبورد و گزارش‌های هوش تجاری.",
+                requirements: ["Python", "SQL", "Power BI", "Machine Learning", "Statistics"],
                 posted: "۶ روز پیش",
                 logo: "fa-chart-bar",
                 match: 89
@@ -518,7 +558,7 @@
 
         // ==================== STATE MANAGEMENT ====================
         let currentJobs = [];
-        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        let favorites = JSON.parse(localStorage.getItem('karsaz_favorites') || '[]');
         let currentJob = null;
 
         // ==================== INITIALIZATION ====================
@@ -526,17 +566,19 @@
             loadJobs();
             setupEventListeners();
             checkDarkMode();
+            setupServiceWorker();
         });
 
         // ==================== EVENT LISTENERS ====================
         function setupEventListeners() {
-            // Dark mode toggle
+            // Dark mode toggles
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+            document.getElementById('mobileDarkModeToggle').addEventListener('click', toggleDarkMode);
             
             // Mobile menu
             document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
             
-            // Search
+            // Search and filters
             document.getElementById('searchInput').addEventListener('input', debounce(searchJobs, 300));
             document.getElementById('locationFilter').addEventListener('change', filterJobs);
             document.getElementById('categoryFilter').addEventListener('change', filterJobs);
@@ -546,15 +588,26 @@
             document.getElementById('resumeFile').addEventListener('change', handleFileSelect);
         }
 
+        // ==================== SERVICE WORKER (PWA) ====================
+        function setupServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
+                    self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
+                    self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
+                `)).catch(() => console.log('Service Worker not registered'));
+            }
+        }
+
         // ==================== DARK MODE ====================
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('darkMode', isDark);
+            localStorage.setItem('karsaz_darkMode', isDark);
         }
 
         function checkDarkMode() {
-            const savedMode = localStorage.getItem('darkMode');
+            const savedMode = localStorage.getItem('karsaz_darkMode');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
             if (savedMode === 'true' || (savedMode === null && prefersDark)) {
@@ -599,45 +652,48 @@
 
         function createJobCard(job) {
             const card = document.createElement('div');
-            card.className = 'job-card bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg fade-in';
+            card.className = 'job-card bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-lg fade-in';
+            card.dataset.jobId = job.id;
+            
+            const isFavorite = favorites.includes(job.id);
+            
             card.innerHTML = `
-                <div class="flex justify-between items-start mb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center">
-                            <i class="fas ${job.logo} text-primary-600"></i>
+                <div class="flex justify-between items-start mb-3 md:mb-4">
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas ${job.logo} text-primary-600 text-sm md:text-base"></i>
                         </div>
-                        <div>
-                            <h3 class="font-bold text-lg">${job.title}</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">${job.company}</p>
+                        <div class="min-w-0">
+                            <h3 class="font-bold text-sm md:text-lg truncate">${job.title}</h3>
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 truncate">${job.company}</p>
                         </div>
                     </div>
-                    <button onclick="toggleFavoriteJob(${job.id})" class="text-gray-400 hover:text-red-500 transition">
-                        <i class="${favorites.includes(job.id) ? 'fas' : 'far'} fa-heart"></i>
+                    <button onclick="toggleFavoriteJob(${job.id})" class="text-gray-400 hover:text-red-500 transition ml-2" aria-label="Toggle favorite">
+                        <i class="${isFavorite ? 'fas' : 'far'} fa-heart text-sm md:text-base"></i>
                     </button>
                 </div>
                 
-                <div class="flex flex-wrap gap-2 mb-4">
-                    <span class="text-sm px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                        <i class="fas fa-map-marker-alt ml-1"></i>${job.location}
+                <div class="flex flex-wrap gap-1 md:gap-2 mb-3 md:mb-4">
+                    <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded flex items-center gap-1">
+                        <i class="fas fa-map-marker-alt text-xs"></i>${job.location}
                     </span>
-                    <span class="text-sm px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg">${job.type}</span>
-                    <span class="text-sm px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg">${job.salary}</span>
+                    <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">${job.type}</span>
+                    <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded font-semibold">${job.salary}</span>
                 </div>
                 
-                <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">${job.description}</p>
+                <p class="text-gray-600 dark:text-gray-400 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2 md:line-clamp-3">${job.description}</p>
+                
+                <div class="flex flex-wrap gap-1 md:gap-2 mb-3 md:mb-4">
+                    ${job.requirements.slice(0, 3).map(req => 
+                        `<span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded">${req}</span>`
+                    ).join('')}
+                </div>
                 
                 <div class="flex justify-between items-center">
-                    <div class="flex gap-2">
-                        ${job.requirements.slice(0, 3).map(req => 
-                            `<span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded">${req}</span>`
-                        ).join('')}
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-primary-600 font-bold">${job.match}% تطابق</span>
-                        <button onclick="showJobDetail(${job.id})" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
-                            مشاهده جزئیات
-                        </button>
-                    </div>
+                    <span class="text-xs md:text-sm text-primary-600 font-bold">${job.match}% تطابق</span>
+                    <button onclick="showJobDetail(${job.id})" class="bg-primary-600 text-white px-3 md:px-4 py-1 md:py-2 rounded-lg hover:bg-primary-700 transition text-xs md:text-sm whitespace-nowrap">
+                        مشاهده جزئیات
+                    </button>
                 </div>
             `;
             return card;
@@ -648,9 +704,10 @@
             const location = document.getElementById('locationFilter').value;
             
             const filtered = mockJobs.filter(job => {
-                const matchesSearch = !query || job.title.toLowerCase().includes(query) || 
-                                     job.company.toLowerCase().includes(query) ||
-                                     job.requirements.some(req => req.toLowerCase().includes(query));
+                const matchesSearch = !query || 
+                    job.title.toLowerCase().includes(query) || 
+                    job.company.toLowerCase().includes(query) ||
+                    job.requirements.some(req => req.toLowerCase().includes(query));
                 const matchesLocation = !location || job.location === location;
                 
                 return matchesSearch && matchesLocation;
@@ -679,67 +736,77 @@
             
             currentJob = job;
             document.getElementById('modalJobTitle').textContent = job.title;
+            
+            const isFavorite = favorites.includes(job.id);
+            
             document.getElementById('modalJobContent').innerHTML = `
-                <div class="mb-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center">
-                            <i class="fas ${job.logo} text-2xl text-primary-600"></i>
+                <div class="mb-4 md:mb-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 mb-3 md:mb-4">
+                        <div class="w-12 h-12 md:w-16 md:h-16 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas ${job.logo} text-primary-600 text-lg md:text-2xl"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-xl">${job.company}</h4>
-                            <div class="flex gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                <span><i class="fas fa-map-marker-alt ml-1"></i>${job.location}</span>
+                            <h4 class="font-bold text-base md:text-xl">${job.company}</h4>
+                            <div class="flex flex-wrap gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                <span class="flex items-center gap-1"><i class="fas fa-map-marker-alt"></i>${job.location}</span>
                                 <span>•</span>
                                 <span>${job.type}</span>
+                                <span>•</span>
+                                <span>منتشر شده: ${job.posted}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-2 mb-4">
-                        <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full">${job.salary}</span>
-                        <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300 rounded-full">تطابق ${job.match}%</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm font-semibold">${job.salary}</span>
+                        <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300 rounded-full text-sm font-semibold">تطابق ${job.match}%</span>
                     </div>
                 </div>
                 
-                <div class="mb-6">
-                    <h5 class="font-bold mb-2">توضیحات شغل</h5>
-                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">${job.description}</p>
+                <div class="mb-4 md:mb-6">
+                    <h5 class="font-bold mb-2 text-base md:text-lg">توضیحات شغل</h5>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-sm md:text-base">${job.description}</p>
                 </div>
                 
-                <div class="mb-6">
-                    <h5 class="font-bold mb-3">مهارت‌های مورد نیاز</h5>
+                <div class="mb-4 md:mb-6">
+                    <h5 class="font-bold mb-3 text-base md:text-lg">مهارت‌های مورد نیاز</h5>
                     <div class="flex flex-wrap gap-2">
                         ${job.requirements.map(req => 
-                            `<span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full">${req}</span>`
+                            `<span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-xs md:text-sm">${req}</span>`
                         ).join('')}
                     </div>
                 </div>
                 
-                <div class="text-sm text-gray-500">
-                    <i class="fas fa-clock ml-1"></i>منتشر شده: ${job.posted}
+                <div class="text-xs md:text-sm text-gray-500">
+                    <i class="fas fa-clock ml-1"></i>آخرین بروزرسانی: ${job.posted}
                 </div>
             `;
             
+            // Update favorite button
+            const favBtn = document.getElementById('favoriteBtn');
+            favBtn.innerHTML = `<i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i> ${isFavorite ? 'حذف' : 'ذخیره'}`;
+            
             document.getElementById('jobDetailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeJobModal() {
             document.getElementById('jobDetailModal').classList.add('hidden');
+            document.body.style.overflow = '';
             currentJob = null;
         }
 
         function applyForJob() {
             if (!currentJob) return;
             
-            // Simulate application
             showNotification(`درخواست شما برای موقعیت "${currentJob.title}" با موفقیت ارسال شد!`, 'success');
             closeJobModal();
-            
-            // Add to dashboard
             addToDashboard(currentJob);
         }
 
         function toggleFavoriteJob(jobId) {
-            if (favorites.includes(jobId)) {
+            const isFavorite = favorites.includes(jobId);
+            
+            if (isFavorite) {
                 favorites = favorites.filter(id => id !== jobId);
                 showNotification('از لیست علاقه‌مندی‌ها حذف شد', 'info');
             } else {
@@ -747,16 +814,45 @@
                 showNotification('به لیست علاقه‌مندی‌ها اضافه شد', 'success');
             }
             
-            localStorage.setItem('favorites', JSON.stringify(favorites));
+            localStorage.setItem('karsaz_favorites', JSON.stringify(favorites));
             renderJobs(currentJobs);
+            
+            // Update modal button if open
+            if (currentJob && currentJob.id === jobId) {
+                const favBtn = document.getElementById('favoriteBtn');
+                favBtn.innerHTML = `<i class="${!isFavorite ? 'fas' : 'far'} fa-heart"></i> ${!isFavorite ? 'حذف' : 'ذخیره'}`;
+            }
         }
 
         function addToDashboard(job) {
-            // This would normally save to backend
-            console.log('Added to dashboard:', job);
+            const container = document.getElementById('recentApplications');
+            const newApp = document.createElement('div');
+            newApp.className = 'border border-gray-200 dark:border-gray-700 rounded-lg p-3 md:p-4 flex flex-col md:flex-row justify-between md:items-center gap-3 fade-in';
+            newApp.innerHTML = `
+                <div>
+                    <h4 class="font-bold text-sm md:text-base">${job.title}</h4>
+                    <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">${job.company}</p>
+                </div>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 rounded-full text-xs">جدید</span>
+                </div>
+            `;
+            container.insertBefore(newApp, container.firstChild);
         }
 
         // ==================== RESUME UPLOAD ====================
+        function showResumeModal() {
+            document.getElementById('resumeModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResumeModal() {
+            document.getElementById('resumeModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            document.getElementById('resumeFile').value = '';
+            document.querySelector('#resumeModal .border-dashed p').textContent = 'فایل رزومه خود را اینجا رها کنید یا کلیک کنید';
+        }
+
         function handleFileSelect(e) {
             const file = e.target.files[0];
             if (file) {
@@ -775,42 +871,32 @@
             showLoading();
             setTimeout(() => {
                 hideLoading();
-                showNotification('رزومه شما با موفقیت آپلود و تحلیل شد!', 'success');
                 closeResumeModal();
-                
-                // Parse resume and update recommendations
+                showNotification('رزومه شما با موفقیت آپلود و تحلیل شد!', 'success');
                 parseResume(file);
             }, 2000);
         }
 
         function parseResume(file) {
             // Simulate AI resume parsing
-            console.log('Parsing resume:', file.name);
             setTimeout(() => {
-                // Update job recommendations based on resume
                 currentJobs = [...mockJobs].sort(() => Math.random() - 0.5);
                 renderJobs(currentJobs);
                 showNotification('پیشنهادهای شغلی بر اساس رزومه شما به‌روزرسانی شد', 'info');
             }, 1500);
         }
 
-        function closeResumeModal() {
-            document.getElementById('resumeModal').classList.add('hidden');
-            document.getElementById('resumeFile').value = '';
-            document.querySelector('#resumeModal .border-dashed p').textContent = 'فایل رزومه خود را اینجا رها کنید یا کلیک کنید';
-        }
-
         // ==================== NOTIFICATIONS ====================
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = `fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm slide-in ${
+            notification.className = `fixed top-16 right-2 left-2 md:right-4 md:left-auto z-50 p-3 md:p-4 rounded-lg shadow-lg max-w-sm slide-in ${
                 type === 'success' ? 'bg-green-500' :
                 type === 'error' ? 'bg-red-500' :
                 type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
             } text-white`;
             
             notification.innerHTML = `
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 text-sm md:text-base">
                     <i class="fas ${
                         type === 'success' ? 'fa-check-circle' :
                         type === 'error' ? 'fa-exclamation-circle' :
@@ -851,12 +937,8 @@
 
         // Close modals on outside click
         window.addEventListener('click', function(e) {
-            if (e.target.id === 'jobDetailModal') {
-                closeJobModal();
-            }
-            if (e.target.id === 'resumeModal') {
-                closeResumeModal();
-            }
+            if (e.target.id === 'jobDetailModal') closeJobModal();
+            if (e.target.id === 'resumeModal') closeResumeModal();
         });
 
         // Keyboard shortcuts
@@ -865,6 +947,17 @@
                 closeJobModal();
                 closeResumeModal();
             }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
         });
     </script>
 </body>
