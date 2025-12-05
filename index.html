@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>کارساز - پلتفرم کاریابی هوشمند | فرصت‌های شغلی متناسب با تو</title>
-    <meta name="description" content="با کارساز، فرصت شغلی رویایی‌ات رو پیدا کن! هوش مصنوعی برات بهترین پیشنهادها رو میاره، رزومه‌ات رو تحلیل می‌کنه و مسیر شغلی‌ت رو مشخص می‌کنه.">
+    <meta name="description" content="پلتفرم کاریابی هوش مصنوعی کارساز - فرصت‌های شغلی متناسب با مهارت و شخصیت شما">
+    <meta name="keywords" content="کاریابی, استخدام, فرصت شغلی, هوش مصنوعی, رزومه, کارساز">
+    <meta name="author" content="کارساز AI">
+    <meta property="og:title" content="کارساز - پلتفرم کاریابی هوشمند">
+    <meta property="og:description" content="با هوش مصنوعی، فرصت شغلی رویایی‌ات رو پیدا کن">
+    <meta property="og:type" content="website">
     
-    <!-- PWA & Meta -->
+    <!-- PWA Meta -->
     <meta name="theme-color" content="#6366f1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="manifest" href='data:application/json;{"name":"کارساز - کاریابی هوشمند","short_name":"کارساز","start_url":"/","display":"standalone","background_color":"#0f172a","theme_color":"#6366f1","lang":"fa"}'>
+    <link rel="manifest" href='data:application/json;{"name":"کارساز - کاریابی هوشمند","short_name":"کارساز","start_url":"/","display":"standalone","background_color":"#0f172a","theme_color":"#6366f1","lang":"fa","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 512 512\'%3E%3Crect fill=\'%236366f1\' width=\'512\' height=\'512\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'300\' fill=\'white\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3Eک%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml"}]}'>
     
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/vazir@4.2.3/index.min.css">
@@ -48,6 +52,7 @@
     </script>
     
     <style>
+        /* ======== CSS Variables & Design System ======== */
         :root {
             --primary: #6366f1;
             --secondary: #10b981;
@@ -59,30 +64,41 @@
             --glass-dark: rgba(0, 0, 0, 0.3);
             --border-light: rgba(255, 255, 255, 0.1);
             --border-dark: rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15);
         }
 
         * {
             font-family: 'Vazir', system-ui, -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
         }
 
         body {
             background: linear-gradient(135deg, var(--light-bg) 0%, #e0f2fe 100%);
             min-height: 100vh;
-            overflow-x: hidden;
+            color: #1e293b;
+            transition: background-color 0.3s ease;
         }
 
         .dark body {
             background: linear-gradient(135deg, var(--dark-bg) 0%, #1e293b 100%);
+            color: #f1f5f9;
         }
 
-        /* Glassmorphism effect */
+        /* ======== Glassmorphism Effect ======== */
         .glass-effect {
             background: var(--glass-light);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
         }
 
         .dark .glass-effect {
@@ -90,31 +106,51 @@
             border: 1px solid var(--border-dark);
         }
 
-        /* Advanced animations */
+        /* ======== Advanced Animations ======== */
         .job-card {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
         .job-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(99, 102, 241, 0.25);
+            box-shadow: var(--shadow-xl);
+            border-color: #6366f1;
         }
 
         .dark .job-card:hover {
-            box-shadow: 0 25px 50px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.3);
+        }
+
+        .job-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .job-card:hover::before {
+            left: 100%;
         }
 
         .fade-in {
             animation: fadeIn 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+            animation-fill-mode: both;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .slide-in {
             animation: slideIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            animation-fill-mode: both;
         }
 
         @keyframes slideIn {
@@ -145,7 +181,7 @@
             50% { background-position: 100% 50%; }
         }
 
-        /* Loading spinner */
+        /* ======== Loading & Spinner ======== */
         .loading-spinner {
             border: 4px solid #f3f4f6;
             border-top: 4px solid #6366f1;
@@ -161,12 +197,14 @@
             100% { transform: rotate(360deg) scale(1); }
         }
 
-        /* Button hover effects */
+        /* ======== Buttons ======== */
         .btn-primary {
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            border: none;
+            cursor: pointer;
         }
 
         .btn-primary:hover {
@@ -190,17 +228,42 @@
             transform: translateX(100%) rotate(45deg);
         }
 
-        /* Hide splash after load */
-        #splashScreen {
-            transition: opacity 0.5s ease;
+        /* ======== Form Styles ======== */
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            ring: 2px;
+            ring-color: #6366f1;
         }
 
-        /* Smooth scroll */
-        html {
-            scroll-behavior: smooth;
+        /* ======== Responsive ======== */
+        @media (max-width: 640px) {
+            .text-6xl { font-size: 2.5rem; line-height: 1.1; }
+            .text-2xl { font-size: 1.5rem; }
         }
 
-        /* Custom scrollbar */
+        /* ======== Print Styles ======== */
+        @media print {
+            body { background: white; }
+            .glass-effect { background: white; border: 1px solid #ccc; }
+            header, footer, .no-print { display: none; }
+        }
+
+        /* ======== Accessibility ======== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ======== Selection ======== */
+        ::selection {
+            background: #6366f1;
+            color: white;
+        }
+
+        /* ======== Scrollbar ======== */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -221,71 +284,121 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #4f46e5;
         }
+
+        /* ======== Splash Screen ======== */
+        #splashScreen {
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .splash-hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        /* ======== Image Loading ======== */
+        .img-loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .img-loaded {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* ======== Page Content ======== */
+        .page-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .page-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="font-vazir antialiased">
-    <!-- ==================== SPLASH SCREEN - 1 SECOND ONLY ==================== -->
+    <!-- ======== SPLASH SCREEN - 1 SECOND ONLY ======== -->
     <div id="splashScreen" class="fixed inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center z-[9999]">
         <div class="text-center">
             <div class="text-6xl font-bold text-white mb-4 floating">کارساز</div>
             <div class="loading-spinner mx-auto"></div>
             <p class="text-white mt-4 text-lg">در حال بارگذاری تجربه کاریابی هوشمند...</p>
+            <!-- Fallback skip button for slow connections -->
+            <button onclick="forceHideSplash()" class="mt-4 text-white/80 hover:text-white text-sm underline font-medium">رد کردن لودینگ</button>
         </div>
     </div>
 
-    <!-- ==================== HEADER - FIXED ==================== -->
-    <header class="fixed top-0 w-full z-50 glass-effect backdrop-blur-xl border-b border-gray-200 dark:border-gray-700">
-        <nav class="container mx-auto px-4 py-3">
+    <!-- ======== HEADER - FIXED ======== -->
+    <header class="fixed top-0 w-full z-50 glass-effect backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <nav class="container mx-auto px-4 py-3" role="navigation" aria-label="Main navigation">
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <button onclick="navigateTo('home')" class="text-2xl font-bold gradient-text hover:scale-105 transition">
+                    <button onclick="navigateTo('home')" class="text-2xl font-bold gradient-text hover:scale-105 transition duration-300" aria-label="Go to homepage">
                         کارساز
-                        <span class="text-xs text-gray-500 align-top">AI</span>
+                        <span class="text-xs text-gray-500 align-top font-normal">AI</span>
                     </button>
                 </div>
 
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center gap-8">
-                    <a onclick="navigateTo('home')" class="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition py-2 font-medium">خانه</a>
-                    <a onclick="navigateTo('jobs')" class="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition py-2 font-medium">فرصت‌ها</a>
-                    <a onclick="navigateTo('dashboard')" class="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition py-2 font-medium">داشبورد</a>
-                    <a onclick="navigateTo('about')" class="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition py-2 font-medium">درباره ما</a>
+                    <a onclick="navigateTo('home')" class="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition py-2 font-medium relative group">
+                        خانه
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a onclick="navigateTo('jobs')" class="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition py-2 font-medium relative group">
+                        فرصت‌ها
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a onclick="navigateTo('dashboard')" class="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition py-2 font-medium relative group">
+                        داشبورد
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
                 </div>
 
                 <!-- Desktop Actions -->
                 <div class="hidden lg:flex items-center gap-4">
-                    <button onclick="showResumeModal()" class="btn-primary text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
+                    <button onclick="showResumeModal()" class="btn-primary text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium hover:shadow-lg transition">
                         <i class="fas fa-upload"></i>
                         آپلود رزومه
                     </button>
-                    <button onclick="navigateTo('login')" class="text-primary-600 dark:text-primary-400 px-4 py-2 rounded-lg border-2 border-primary-600 hover:bg-primary-600 hover:text-white transition font-medium">
+                    <button onclick="navigateTo('login')" class="text-primary-600 dark:text-primary-400 px-4 py-2 rounded-lg border-2 border-primary-600 hover:bg-primary-600 hover:text-white transition font-medium hover:shadow-md">
                         ورود
                     </button>
-                    <button onclick="navigateTo('signup')" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
+                    <button onclick="navigateTo('signup')" class="btn-primary text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transition">
                         ثبت‌نام رایگان
                     </button>
-                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon dark:hidden text-lg"></i>
-                        <i class="fas fa-sun hidden dark:inline text-lg"></i>
+                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-300" aria-label="Toggle dark mode" title="تم روشن/تاریک">
+                        <i class="fas fa-moon dark:hidden text-lg transition"></i>
+                        <i class="fas fa-sun hidden dark:inline text-lg transition"></i>
                     </button>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button class="lg:hidden p-2" id="mobileMenuBtn" aria-label="Open menu">
+                <button class="lg:hidden p-2" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">
                     <i class="fas fa-bars text-xl text-gray-700 dark:text-gray-300"></i>
                 </button>
             </div>
 
             <!-- Mobile Menu -->
-            <div id="mobileMenu" class="hidden lg:hidden mt-4 space-y-3 bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-                <a onclick="navigateTo('home'); toggleMobileMenu()" class="block cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2 font-medium">خانه</a>
-                <a onclick="navigateTo('jobs'); toggleMobileMenu()" class="block cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2 font-medium">فرصت‌ها</a>
-                <a onclick="navigateTo('dashboard'); toggleMobileMenu()" class="block cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2 font-medium">داشبورد</a>
-                <button onclick="showResumeModal(); toggleMobileMenu()" class="w-full text-right text-primary-600 dark:text-primary-400 py-2 font-medium flex items-center gap-2">
+            <div id="mobileMenu" class="hidden lg:hidden mt-4 space-y-3 bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg" role="menu">
+                <a onclick="navigateTo('home'); toggleMobileMenu()" class="block cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2 font-medium" role="menuitem">خانه</a>
+                <a onclick="navigateTo('jobs'); toggleMobileMenu()" class="block cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2 font-medium" role="menuitem">فرصت‌ها</a>
+                <a onclick="navigateTo('dashboard'); toggleMobileMenu()" class="block cursor-pointer text-gray-700 dark:text-gray-300 hover:text-primary-600 transition py-2 font-medium" role="menuitem">داشبورد</a>
+                <button onclick="showResumeModal(); toggleMobileMenu()" class="w-full text-right text-primary-600 dark:text-primary-400 py-2 font-medium flex items-center gap-2" role="menuitem">
                     <i class="fas fa-upload"></i> آپلود رزومه
                 </button>
-                <div class="flex gap-2">
+                <div class="flex gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
                     <button onclick="navigateTo('login'); toggleMobileMenu()" class="flex-1 text-primary-600 dark:text-primary-400 px-4 py-2 rounded-lg border-2 border-primary-600 hover:bg-primary-600 hover:text-white transition font-medium">
                         ورود
                     </button>
@@ -297,14 +410,14 @@
         </nav>
     </header>
 
-    <!-- ==================== MAIN CONTENT - PAGE ROUTER ==================== -->
+    <!-- ======== MAIN CONTENT - PAGE ROUTER ======== -->
     <main class="pt-20">
-        <!-- ========== HOME PAGE ========== -->
+        <!-- ======== HOME PAGE ======== -->
         <div id="homePage" class="page-content active">
             <!-- Hero Section -->
-            <section class="container mx-auto px-4 py-8 md:py-16">
+            <section class="container mx-auto px-4 py-8 md:py-16" aria-labelledby="hero-title">
                 <div class="text-center mb-8 md:mb-12">
-                    <h1 class="text-4xl md:text-6xl font-bold mb-4 md:mb-6 floating">
+                    <h1 id="hero-title" class="text-4xl md:text-6xl font-bold mb-4 md:mb-6 floating leading-tight">
                         فرصت شغلی <span class="gradient-text">رویایی‌ات</span> رو پیدا کن!
                     </h1>
                     <p class="text-base md:text-xl text-gray-600 dark:text-gray-400 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -312,18 +425,18 @@
                     </p>
 
                     <!-- Search Bar -->
-                    <div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-3 md:p-4 border border-gray-200 dark:border-gray-700">
+                    <div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-3 md:p-4 border border-gray-200 dark:border-gray-700 transition hover:shadow-2xl">
                         <div class="flex flex-col md:flex-row gap-3 md:gap-4">
                             <div class="flex-1 relative group">
                                 <i class="fas fa-search absolute right-3 top-3 md:top-4 text-gray-400 text-sm md:text-base transition group-focus-within:text-primary-600"></i>
                                 <input type="text" id="searchInput" placeholder="چه شغلی یا مهارتی دنبالش هستی؟ (مثلا: React, طراحی UI, بازاریابی)" 
-                                       class="w-full pr-9 pl-3 md:pr-10 md:pl-4 py-2 md:py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base"
-                                       aria-label="Search jobs">
+                                       class="w-full pr-9 pl-3 md:pr-10 md:pl-4 py-2 md:py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base transition"
+                                       aria-label="جستجوی شغل یا مهارت" autocomplete="off">
                             </div>
                             <div class="flex-1 relative">
                                 <i class="fas fa-map-marker-alt absolute right-3 top-3 md:top-4 text-gray-400 text-sm md:text-base"></i>
-                                <select id="locationFilter" class="w-full pr-9 pl-3 md:pr-10 md:pl-4 py-2 md:py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base"
-                                        aria-label="Filter by location">
+                                <select id="locationFilter" class="w-full pr-9 pl-3 md:pr-10 md:pl-4 py-2 md:py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base transition"
+                                        aria-label="فیلتر شهر">
                                     <option value="">همه جای ایران</option>
                                     <option>تهران</option>
                                     <option>اصفهان</option>
@@ -333,8 +446,8 @@
                                     <option>تبریز</option>
                                 </select>
                             </div>
-                            <button onclick="searchJobs()" class="btn-primary text-white px-4 md:px-8 py-2 md:py-3 rounded-lg transition text-sm md:text-base whitespace-nowrap flex items-center justify-center gap-2"
-                                    aria-label="Search">
+                            <button onclick="searchJobs()" class="btn-primary text-white px-4 md:px-8 py-2 md:py-3 rounded-lg transition text-sm md:text-base whitespace-nowrap flex items-center justify-center gap-2 hover:shadow-lg"
+                                    aria-label="جستجو">
                                 <i class="fas fa-search"></i>
                                 <span>بگرد!</span>
                             </button>
@@ -344,32 +457,32 @@
 
                 <!-- Stats -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mt-6 md:mt-12">
-                    <div class="text-center glass-effect p-4 md:p-6 rounded-xl hover:scale-105 transition group">
+                    <div class="text-center glass-effect p-4 md:p-6 rounded-xl hover:scale-105 transition group hover:shadow-lg">
                         <div class="text-2xl md:text-3xl font-bold text-primary-600 group-hover:text-primary-500 transition">۲۳۴۰</div>
                         <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-500 transition">فرصت شغلی فعال</div>
                     </div>
-                    <div class="text-center glass-effect p-4 md:p-6 rounded-xl hover:scale-105 transition group">
+                    <div class="text-center glass-effect p-4 md:p-6 rounded-xl hover:scale-105 transition group hover:shadow-lg">
                         <div class="text-2xl md:text-3xl font-bold text-primary-600 group-hover:text-primary-500 transition">۵۶۰</div>
                         <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-500 transition">شرکت معتبر</div>
                     </div>
-                    <div class="text-center glass-effect p-4 md:p-6 rounded-xl hover:scale-105 transition group">
+                    <div class="text-center glass-effect p-4 md:p-6 rounded-xl hover:scale-105 transition group hover:shadow-lg">
                         <div class="text-2xl md:text-3xl font-bold text-primary-600 group-hover:text-primary-500 transition">۸۹٪</div>
                         <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-500 transition">نرخ موفقیت کاربران</div>
                     </div>
-                    <div class="text-center glass-effect p-4 md:p-6 rounded-xl hover:scale-105 transition group">
+                    <div class="text-center glass-effect p-4 md:p-6 rounded-xl hover:scale-105 transition group hover:shadow-lg">
                         <div class="text-2xl md:text-3xl font-bold text-primary-600 group-hover:text-primary-500 transition">۴۸h</div>
                         <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-500 transition">میانگین زمان استخدام</div>
                     </div>
                 </div>
             </section>
 
-            <!-- Job Listings Directly After Search -->
-            <section id="jobListingsSection" class="container mx-auto px-4 py-8 md:py-12">
-                <div class="flex justify-between items-center mb-6 md:mb-8">
-                    <h2 class="text-2xl md:text-3xl font-bold gradient-text">فرصت‌های شغلی پیشنهادی فقط برای تو</h2>
+            <!-- Job Listings -->
+            <section id="jobListingsSection" class="container mx-auto px-4 py-8 md:py-12" aria-labelledby="jobs-title">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
+                    <h2 id="jobs-title" class="text-2xl md:text-3xl font-bold gradient-text">فرصت‌های شغلی پیشنهادی فقط برای تو</h2>
                     <div class="hidden md:flex gap-3">
-                        <select id="sortJobs" class="px-3 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm"
-                                aria-label="Sort jobs">
+                        <select id="sortJobs" class="px-3 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm transition hover:border-primary-500"
+                                aria-label="مرتب‌سازی">
                             <option value="match">بیشترین تطابق</option>
                             <option value="newest">جدیدترین‌ها</option>
                             <option value="salary">بیشترین حقوق</option>
@@ -381,22 +494,22 @@
                     <!-- Jobs will be loaded here -->
                 </div>
 
-                <div id="loadingSpinner" class="flex justify-center mt-8 hidden">
+                <div id="loadingSpinner" class="flex justify-center mt-8 hidden" aria-live="polite">
                     <div class="loading-spinner"></div>
                 </div>
 
                 <div class="text-center mt-8">
-                    <button onclick="loadMoreJobs()" class="btn-primary text-white px-6 md:px-8 py-3 rounded-lg font-medium">
+                    <button onclick="loadMoreJobs()" class="btn-primary text-white px-6 md:px-8 py-3 rounded-lg font-medium hover:shadow-lg transition">
                         بارگذاری فرصت‌های بیشتر <i class="fas fa-chevron-down mr-2"></i>
                     </button>
                 </div>
             </section>
 
             <!-- Advanced Features -->
-            <section id="advancedFeatures" class="py-12 md:py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-indigo-950">
+            <section id="advancedFeatures" class="py-12 md:py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-indigo-950" aria-labelledby="features-title">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8 md:mb-12">
-                        <h2 class="text-2xl md:text-4xl font-bold gradient-text mb-4">چرا کارساز از بقیه بهتره؟</h2>
+                        <h2 id="features-title" class="text-2xl md:text-4xl font-bold gradient-text mb-4">چرا کارساز از بقیه بهتره؟</h2>
                         <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
                             ما از هوش مصنوعی پیشرفته استفاده می‌کنیم تا تجربه کاریابی تو رو کاملاً شخصی‌سازی کنیم
                         </p>
@@ -404,12 +517,16 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12">
                         <!-- Feature 1: AI Matching -->
-                        <div class="glass-effect rounded-2xl overflow-hidden group hover:shadow-2xl transition">
-                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=350&fit=crop" 
-                                 alt="AI Matching" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="glass-effect rounded-2xl overflow-hidden group hover:shadow-2xl transition cursor-pointer">
+                            <div class="img-loading">
+                                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=350&fit=crop" 
+                                     alt="تطبیق هوش مصنوعی" 
+                                     class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105 img-loaded"
+                                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'350\'%3E%3Crect fill=\'%236366f1\' width=\'600\' height=\'350\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3Eتطبیق هوشمند%3C/text%3E%3C/svg%3E'">
+                            </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-4 mb-4">
-                                    <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl">
+                                    <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl transition group-hover:scale-110">
                                         <i class="fas fa-brain"></i>
                                     </div>
                                     <div>
@@ -424,12 +541,16 @@
                         </div>
 
                         <!-- Feature 2: Resume Analysis -->
-                        <div class="glass-effect rounded-2xl overflow-hidden group hover:shadow-2xl transition">
-                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=350&fit=crop" 
-                                 alt="Resume Analysis" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="glass-effect rounded-2xl overflow-hidden group hover:shadow-2xl transition cursor-pointer">
+                            <div class="img-loading">
+                                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=350&fit=crop" 
+                                     alt="تحلیل رزومه هوشمند"
+                                     class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105 img-loaded"
+                                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'350\'%3E%3Crect fill=\'%2310b981\' width=\'600\' height=\'350\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'40\' fill=\'white\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3Eتحلیل رزومه%3C/text%3E%3C/svg%3E'">
+                            </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-4 mb-4">
-                                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white text-2xl">
+                                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white text-2xl transition group-hover:scale-110">
                                         <i class="fas fa-file-alt"></i>
                                     </div>
                                     <div>
@@ -444,12 +565,16 @@
                         </div>
 
                         <!-- Feature 3: Career Path -->
-                        <div class="lg:col-span-2 glass-effect rounded-2xl overflow-hidden group hover:shadow-2xl transition">
-                            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&h=400&fit=crop" 
-                                 alt="Career Path" class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="lg:col-span-2 glass-effect rounded-2xl overflow-hidden group hover:shadow-2xl transition cursor-pointer">
+                            <div class="img-loading">
+                                <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&h=400&fit=crop" 
+                                     alt="مسیر شغلی شخصی‌سازی‌شده"
+                                     class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105 img-loaded"
+                                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'1200\' height=\'400\'%3E%3Crect fill=\'%23f59e0b\' width=\'1200\' height=\'400\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'60\' fill=\'white\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3Eمسیر شغلی%3C/text%3E%3C/svg%3E'">
+                            </div>
                             <div class="p-6 md:p-8">
                                 <div class="flex items-center gap-4 mb-6">
-                                    <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-white text-3xl">
+                                    <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-white text-3xl transition group-hover:scale-110">
                                         <i class="fas fa-route"></i>
                                     </div>
                                     <div>
@@ -467,22 +592,24 @@
             </section>
         </div>
 
-        <!-- ========== JOBS PAGE ========== -->
+        <!-- ======== JOBS PAGE ======== -->
         <div id="jobsPage" class="page-content">
-            <section class="container mx-auto px-4 py-8 md:py-16">
+            <section class="container mx-auto px-4 py-8 md:py-16" aria-labelledby="jobsPage-title">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl md:text-5xl font-bold gradient-text mb-4">هر چیزی که دنبالشی اینجاست</h1>
+                    <h1 id="jobsPage-title" class="text-3xl md:text-5xl font-bold gradient-text mb-4">هر چیزی که دنبالشی اینجاست</h1>
                     <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto">با فیلترهای پیشرفته، دقیقاً اون شغلی رو پیدا کن که می‌خوای</p>
                 </div>
 
-                <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 md:p-6 mb-8">
+                <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 md:p-6 mb-8 transition hover:shadow-2xl">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="relative">
                             <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
                             <input type="text" id="jobsPageSearch" placeholder="جستجو..." 
-                                   class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500">
+                                   class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                   aria-label="جستجوی پیشرفته">
                         </div>
-                        <select id="categoryFilterPage" class="px-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500">
+                        <select id="categoryFilterPage" class="px-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                aria-label="دسته‌بندی">
                             <option value="">دسته‌بندی</option>
                             <option>توسعه نرم‌افزار</option>
                             <option>طراحی UI/UX</option>
@@ -490,13 +617,14 @@
                             <option>مدیریت</option>
                             <option>داده و تحلیل</option>
                         </select>
-                        <select id="typeFilterPage" class="px-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500">
+                        <select id="typeFilterPage" class="px-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                aria-label="نوع همکاری">
                             <option value="">نوع همکاری</option>
                             <option>تمام‌وقت</option>
                             <option>پاره‌وقت</option>
                             <option>دورکاری</option>
                         </select>
-                        <button onclick="searchJobsPage()" class="btn-primary text-white px-4 py-3 rounded-lg">
+                        <button onclick="searchJobsPage()" class="btn-primary text-white px-4 py-3 rounded-lg hover:shadow-lg transition">
                             فیلتر کن
                         </button>
                     </div>
@@ -508,36 +636,36 @@
             </section>
         </div>
 
-        <!-- ========== DASHBOARD PAGE ========== -->
+        <!-- ======== DASHBOARD PAGE ======== -->
         <div id="dashboardPage" class="page-content">
             <section class="container mx-auto px-4 py-8 md:py-12">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     <!-- Sidebar -->
                     <div class="lg:col-span-1">
-                        <div class="glass-effect rounded-2xl p-6">
+                        <div class="glass-effect rounded-2xl p-6 sticky top-24">
                             <div class="text-center mb-6">
-                                <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl">
+                                <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl transition hover:scale-105">
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <h3 class="font-bold text-lg">سلام، مهمان 👋</h3>
                                 <p class="text-sm text-gray-500">کاربر طلایی</p>
                             </div>
-                            <nav class="space-y-2">
-                                <a onclick="showDashboardSection('applications')" class="cursor-pointer flex items-center gap-3 p-3 rounded-lg bg-primary-600 text-white">
+                            <nav class="space-y-2" role="navigation" aria-label="Dashboard navigation">
+                                <a onclick="showDashboardSection('applications')" class="cursor-pointer flex items-center gap-3 p-3 rounded-lg bg-primary-600 text-white transition hover:translate-x-1">
                                     <i class="fas fa-briefcase"></i>
                                     درخواست‌های من
-                                    <span class="mr-auto bg-white text-primary-600 px-2 py-1 rounded-full text-xs">۳</span>
+                                    <span class="mr-auto bg-white text-primary-600 px-2 py-1 rounded-full text-xs font-bold">۳</span>
                                 </a>
-                                <a onclick="showDashboardSection('favorites')" class="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                                <a onclick="showDashboardSection('favorites')" class="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition hover:translate-x-1">
                                     <i class="fas fa-heart"></i>
                                     علاقه‌مندی‌ها
-                                    <span class="mr-auto bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full text-xs">${favorites.length}</span>
+                                    <span class="mr-auto bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full text-xs font-bold">${favorites.length}</span>
                                 </a>
-                                <a onclick="showDashboardSection('resume')" class="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                                <a onclick="showDashboardSection('resume')" class="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition hover:translate-x-1">
                                     <i class="fas fa-file-alt"></i>
                                     رزومه من
                                 </a>
-                                <a onclick="showDashboardSection('tests')" class="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                                <a onclick="showDashboardSection('tests')" class="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition hover:translate-x-1">
                                     <i class="fas fa-graduation-cap"></i>
                                     آزمون‌های من
                                 </a>
@@ -547,7 +675,7 @@
 
                     <!-- Main Content -->
                     <div class="lg:col-span-3">
-                        <div class="glass-effect rounded-2xl p-6" id="dashboardContent">
+                        <div class="glass-effect rounded-2xl p-6" id="dashboardContent" role="main">
                             <!-- Dashboard sections will be loaded here -->
                         </div>
                     </div>
@@ -555,121 +683,167 @@
             </section>
         </div>
 
-        <!-- ========== LOGIN PAGE ========== -->
+        <!-- ======== LOGIN PAGE ======== -->
         <div id="loginPage" class="page-content">
-            <section class="container mx-auto px-4 py-8 md:py-20">
-                <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 md:p-8">
+            <section class="container mx-auto px-4 py-8 md:py-20" aria-labelledby="login-title">
+                <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 md:p-8 transition hover:shadow-2xl">
                     <div class="text-center mb-6">
-                        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl">
+                        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl transition hover:scale-110">
                             <i class="fas fa-lock"></i>
                         </div>
-                        <h2 class="text-2xl font-bold gradient-text">خوش برگشتی!</h2>
+                        <h2 id="login-title" class="text-2xl font-bold gradient-text">خوش برگشتی!</h2>
                         <p class="text-gray-600 dark:text-gray-400 text-sm">اطلاعات اکانتت رو وارد کن</p>
                     </div>
-                    <form onsubmit="handleLogin(event)">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-right text-sm font-medium mb-2">ایمیل یا شماره موبایل</label>
-                                <div class="relative">
-                                    <i class="fas fa-user absolute right-3 top-3 text-gray-400"></i>
-                                    <input type="text" required class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500" placeholder="example@email.com">
-                                </div>
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-right text-sm font-medium mb-2" for="login-email">ایمیل یا شماره موبایل</label>
+                            <div class="relative">
+                                <i class="fas fa-user absolute right-3 top-3 text-gray-400"></i>
+                                <input type="text" id="login-email" required 
+                                       class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                       placeholder="example@email.com">
                             </div>
-                            <div>
-                                <label class="block text-right text-sm font-medium mb-2">رمز عبور</label>
-                                <div class="relative">
-                                    <i class="fas fa-lock absolute right-3 top-3 text-gray-400"></i>
-                                    <input type="password" required class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500" placeholder="••••••••">
-                                </div>
-                            </div>
-                            <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-medium">
-                                وارد شو
-                            </button>
                         </div>
+                        <div>
+                            <label class="block text-right text-sm font-medium mb-2" for="login-password">رمز عبور</label>
+                            <div class="relative">
+                                <i class="fas fa-lock absolute right-3 top-3 text-gray-400"></i>
+                                <input type="password" id="login-password" required 
+                                       class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                       placeholder="••••••••">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                مرا به خاطر بسپار
+                            </label>
+                            <a href="#" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">فراموشی رمز؟</a>
+                        </div>
+                        <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-medium hover:shadow-lg transition">
+                            وارد شو
+                        </button>
                     </form>
                     <div class="text-center mt-4 text-sm">
-                        <a onclick="navigateTo('signup')" class="cursor-pointer text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">هنوز اکانت نساختی؟ ثبت‌نام کن</a>
+                        <a onclick="navigateTo('signup')" class="cursor-pointer text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">هنوز اکانت نساختی؟ ثبت‌نام کن</a>
                     </div>
                 </div>
             </section>
         </div>
 
-        <!-- ========== SIGNUP PAGE ========== -->
+        <!-- ======== SIGNUP PAGE ======== -->
         <div id="signupPage" class="page-content">
-            <section class="container mx-auto px-4 py-8 md:py-20">
-                <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 md:p-8">
+            <section class="container mx-auto px-4 py-8 md:py-20" aria-labelledby="signup-title">
+                <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 md:p-8 transition hover:shadow-2xl">
                     <div class="text-center mb-6">
-                        <div class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl">
+                        <div class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl transition hover:scale-110">
                             <i class="fas fa-user-plus"></i>
                         </div>
-                        <h2 class="text-2xl font-bold gradient-text">به جمع کارسازی‌ها بپیون!</h2>
+                        <h2 id="signup-title" class="text-2xl font-bold gradient-text">به جمع کارسازی‌ها بپیون!</h2>
                         <p class="text-gray-600 dark:text-gray-400 text-sm">فقط چند ثانیه طول می‌کشه</p>
                     </div>
-                    <form onsubmit="handleSignup(event)">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-right text-sm font-medium mb-2">نام کامل</label>
-                                <div class="relative">
-                                    <i class="fas fa-user-circle absolute right-3 top-3 text-gray-400"></i>
-                                    <input type="text" required class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500" placeholder="علی احمدی">
-                                </div>
+                    <form onsubmit="handleSignup(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-right text-sm font-medium mb-2" for="signup-name">نام کامل</label>
+                            <div class="relative">
+                                <i class="fas fa-user-circle absolute right-3 top-3 text-gray-400"></i>
+                                <input type="text" id="signup-name" required 
+                                       class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                       placeholder="علی احمدی">
                             </div>
-                            <div>
-                                <label class="block text-right text-sm font-medium mb-2">ایمیل</label>
-                                <div class="relative">
-                                    <i class="fas fa-envelope absolute right-3 top-3 text-gray-400"></i>
-                                    <input type="email" required class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500" placeholder="your@email.com">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-right text-sm font-medium mb-2">شماره موبایل</label>
-                                <div class="relative">
-                                    <i class="fas fa-phone absolute right-3 top-3 text-gray-400"></i>
-                                    <input type="tel" required class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500" placeholder="۰۹۱۲۳۴۵۶۷۸۹">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-right text-sm font-medium mb-2">رمز عبور</label>
-                                <div class="relative">
-                                    <i class="fas fa-lock absolute right-3 top-3 text-gray-400"></i>
-                                    <input type="password" required minlength="6" class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500" placeholder="حداقل ۶ کاراکتر">
-                                </div>
-                            </div>
-                            <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-medium">
-                                اکانت بساز
-                            </button>
                         </div>
+                        <div>
+                            <label class="block text-right text-sm font-medium mb-2" for="signup-email">ایمیل</label>
+                            <div class="relative">
+                                <i class="fas fa-envelope absolute right-3 top-3 text-gray-400"></i>
+                                <input type="email" id="signup-email" required 
+                                       class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                       placeholder="your@email.com">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-right text-sm font-medium mb-2" for="signup-phone">شماره موبایل</label>
+                            <div class="relative">
+                                <i class="fas fa-phone absolute right-3 top-3 text-gray-400"></i>
+                                <input type="tel" id="signup-phone" required 
+                                       class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                       placeholder="۰۹۱۲۳۴۵۶۷۸۹">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-right text-sm font-medium mb-2" for="signup-password">رمز عبور</label>
+                            <div class="relative">
+                                <i class="fas fa-lock absolute right-3 top-3 text-gray-400"></i>
+                                <input type="password" id="signup-password" required minlength="6"
+                                       class="w-full pr-10 pl-3 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary-500 transition"
+                                       placeholder="حداقل ۶ کاراکتر">
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2 text-sm">
+                            <input type="checkbox" required class="mt-1 rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                            <label>من <a href="#" class="text-primary-600 hover:underline">قوانین و مقررات</a> رو می‌پذیرم</label>
+                        </div>
+                        <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-medium hover:shadow-lg transition">
+                            اکانت بساز
+                        </button>
                     </form>
+                    <div class="text-center mt-4 text-sm">
+                        <a onclick="navigateTo('login')" class="cursor-pointer text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">قبلاً اکانت ساختی؟ وارد شو</a>
+                    </div>
                 </div>
             </section>
         </div>
     </main>
 
-    <!-- ==================== MODALS ==================== -->
+    <!-- ======== MODALS ======== -->
+    <!-- Job Detail Modal -->
+    <div id="jobDetailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="jobDetailTitle">
+        <div class="flex items-center justify-center min-h-screen p-2 md:p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 md:p-8 max-w-4xl w-full slide-in mx-2">
+                <div class="flex justify-between items-start mb-4 md:mb-6">
+                    <h3 id="jobDetailTitle" class="text-lg md:text-2xl font-bold pr-8 md:pr-0 text-gray-800 dark:text-white"></h3>
+                    <button onclick="closeJobModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xl md:text-2xl transition" aria-label="بستن">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="modalJobContent"></div>
+                <div class="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3">
+                    <button onclick="applyForJob()" class="flex-1 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition font-medium">
+                        اقدام برای شغل
+                    </button>
+                    <button onclick="toggleFavoriteJob(currentJob.id)" id="favoriteBtn" class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition font-medium">
+                        <i class="far fa-heart ml-1"></i> ذخیره
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Resume Upload Modal -->
-    <div id="resumeModal" class="hidden fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 max-w-md w-full slide-in border border-gray-200 dark:border-gray-700">
+    <div id="resumeModal" class="hidden fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm z-[100] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="resumeUploadTitle">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 max-w-md w-full slide-in border border-gray-200 dark:border-gray-700 shadow-2xl">
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl transition hover:scale-110">
                     <i class="fas fa-cloud-upload-alt"></i>
                 </div>
-                <h3 class="text-xl font-bold gradient-text mb-2">رزومه‌ات رو آپلود کن</h3>
+                <h3 id="resumeUploadTitle" class="text-xl font-bold gradient-text mb-2">رزومه‌ات رو آپلود کن</h3>
                 <p class="text-gray-600 dark:text-gray-400 text-sm">فایل PDF یا Word رو اینجا رها کن</p>
             </div>
-            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-primary-500 transition cursor-pointer mb-6"
+            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-primary-500 transition cursor-pointer mb-6 hover:bg-gray-50 dark:hover:bg-gray-700"
                  onclick="document.getElementById('resumeFile').click()">
-                <i class="fas fa-file-upload text-4xl text-gray-400 mb-3"></i>
+                <i class="fas fa-file-upload text-4xl text-gray-400 mb-3 transition group-hover:text-primary-500"></i>
                 <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">فایل رو اینجا رها کن یا کلیک کن</p>
-                <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" class="hidden" aria-label="Upload resume">
-                <button type="button" class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg text-sm">
+                <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" class="hidden" aria-label="انتخاب فایل رزومه">
+                <button type="button" class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
                     انتخاب فایل
                 </button>
             </div>
+            <div id="resumeFileName" class="text-sm text-gray-500 text-center mb-4 hidden"></div>
             <div class="flex gap-3">
-                <button onclick="closeResumeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-3 rounded-lg transition">
+                <button onclick="closeResumeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition font-medium">
                     انصراف
                 </button>
-                <button onclick="uploadResume()" class="btn-primary flex-1 text-white py-3 rounded-lg">
+                <button onclick="uploadResume()" class="btn-primary flex-1 text-white py-3 rounded-lg font-medium">
                     آپلود و تحلیل
                 </button>
             </div>
@@ -677,41 +851,53 @@
     </div>
 
     <!-- Notification Toast -->
-    <div id="notification" class="fixed top-24 right-4 z-[200] max-w-sm slide-in hidden">
+    <div id="notification" class="fixed top-24 right-4 z-[200] max-w-sm slide-in hidden" role="alert" aria-live="assertive">
         <div class="bg-green-500 text-white p-4 rounded-lg shadow-2xl flex items-center gap-3">
             <i class="fas fa-check-circle text-xl"></i>
             <span id="notificationMessage"></span>
-            <button onclick="hideNotification()" class="ml-auto text-white/70 hover:text-white">
+            <button onclick="hideNotification()" class="ml-auto text-white/70 hover:text-white transition" aria-label="بستن اعلان">
                 <i class="fas fa-times"></i>
             </button>
         </div>
     </div>
 
     <script>
-        // ==================== APP STATE ====================
+        // ======== APP STATE ========
         let currentPage = 'home';
         let currentUser = null;
         let currentJobs = [];
         let favorites = JSON.parse(localStorage.getItem('karsaz_favorites') || '[]');
         let currentJob = null;
 
-        // ==================== INITIALIZATION ====================
+        // ======== INITIALIZATION ========
         document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-            checkDarkMode();
-            setupEventListeners();
-            loadJobs();
-            
-            // Hide splash screen after 1 SECOND (changed from 2 seconds)
-            setTimeout(() => {
-                const splash = document.getElementById('splashScreen');
-                splash.style.opacity = '0';
-                setTimeout(() => splash.remove(), 500);
-            }, 1000); // CHANGED: 2000ms -> 1000ms
+            // Make sure DOM is ready
+            requestAnimationFrame(() => {
+                initializeApp();
+                checkDarkMode();
+                setupEventListeners();
+                loadJobs();
+                
+                // Force hide splash after 1 second even if images are slow
+                setTimeout(() => {
+                    const splash = document.getElementById('splashScreen');
+                    if (splash && splash.parentNode) {
+                        splash.classList.add('splash-hidden');
+                        setTimeout(() => splash.remove(), 500);
+                    }
+                }, 1000);
+            });
         });
 
+        function forceHideSplash() {
+            const splash = document.getElementById('splashScreen');
+            if (splash) {
+                splash.classList.add('splash-hidden');
+                setTimeout(() => splash.remove(), 300);
+            }
+        }
+
         function initializeApp() {
-            // Check if user is logged in
             currentUser = localStorage.getItem('karsaz_user');
             if (currentUser) {
                 currentUser = JSON.parse(currentUser);
@@ -721,46 +907,90 @@
 
         function setupEventListeners() {
             // Dark mode toggles
-            document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
-            document.getElementById('mobileDarkModeToggle')?.addEventListener('click', toggleDarkMode);
+            const darkModeBtn = document.getElementById('darkModeToggle');
+            if (darkModeBtn) darkModeBtn.addEventListener('click', toggleDarkMode);
             
             // Mobile menu
-            document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMobileMenu);
             
             // Search
-            document.getElementById('searchInput').addEventListener('input', debounce(searchJobs, 300));
-            document.getElementById('locationFilter').addEventListener('change', filterJobs);
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.addEventListener('input', debounce(searchJobs, 300));
+            
+            const locationFilter = document.getElementById('locationFilter');
+            if (locationFilter) locationFilter.addEventListener('change', filterJobs);
             
             // File upload
-            document.getElementById('resumeFile').addEventListener('change', handleFileSelect);
+            const resumeFile = document.getElementById('resumeFile');
+            if (resumeFile) resumeFile.addEventListener('change', handleFileSelect);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeJobModal();
+                    closeResumeModal();
+                    hideNotification();
+                }
+                if (e.ctrlKey && e.key === '/') {
+                    e.preventDefault();
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput) searchInput.focus();
+                }
+            });
         }
 
-        // ==================== NAVIGATION ====================
+        // ======== NAVIGATION ========
         function navigateTo(page) {
             // Hide all pages
-            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.page-content').forEach(p => {
+                p.classList.remove('active');
+                p.style.display = 'none';
+            });
             
             // Show target page
             const targetPage = document.getElementById(page + 'Page');
             if (targetPage) {
+                targetPage.style.display = 'block';
+                // Trigger reflow to apply animation
+                targetPage.offsetHeight;
                 targetPage.classList.add('active');
                 currentPage = page;
-                window.scrollTo(0, 0);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 
-                // Close mobile menu
-                document.getElementById('mobileMenu').classList.add('hidden');
+                // Update mobile menu button state
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                }
                 
-                // Load page-specific data
-                if (page === 'dashboard') loadDashboard();
-                if (page === 'jobs') loadJobsPage();
+                // Trigger page load events
+                const event = new CustomEvent('pageChange', { detail: { page } });
+                document.dispatchEvent(event);
             }
         }
 
-        // ==================== DARK MODE ====================
+        // Listen for page changes
+        document.addEventListener('pageChange', function(e) {
+            const page = e.detail.page;
+            if (page === 'dashboard') loadDashboard();
+            if (page === 'jobs') renderJobs(mockJobs, 'jobsPageContainer');
+        });
+
+        // ======== DARK MODE ========
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
             localStorage.setItem('karsaz_darkMode', isDark);
+            
+            // Update button icon
+            const moonIcon = document.querySelector('#darkModeToggle .fa-moon');
+            const sunIcon = document.querySelector('#darkModeToggle .fa-sun');
+            if (moonIcon && sunIcon) {
+                moonIcon.classList.toggle('hidden');
+                sunIcon.classList.toggle('hidden');
+            }
         }
 
         function checkDarkMode() {
@@ -772,13 +1002,18 @@
             }
         }
 
-        // ==================== MOBILE MENU ====================
+        // ======== MOBILE MENU ========
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
+            const btn = document.getElementById('mobileMenuBtn');
+            if (menu && btn) {
+                menu.classList.toggle('hidden');
+                const isExpanded = !menu.classList.contains('hidden');
+                btn.setAttribute('aria-expanded', isExpanded);
+            }
         }
 
-        // ==================== MOCK DATA ====================
+        // ======== MOCK DATA ========
         const mockJobs = [
             {
                 id: 1,
@@ -866,7 +1101,7 @@
             }
         ];
 
-        // ==================== JOB FUNCTIONS ====================
+        // ======== JOB FUNCTIONS ========
         function loadJobs() {
             currentJobs = [...mockJobs];
             renderJobs(currentJobs, 'jobsContainer');
@@ -874,16 +1109,20 @@
 
         function renderJobs(jobs, containerId = 'jobsContainer') {
             const container = document.getElementById(containerId);
+            if (!container) return;
+            
             container.innerHTML = '';
             
-            jobs.forEach(job => {
-                const jobCard = createJobCard(job);
-                container.appendChild(jobCard);
+            jobs.forEach((job, index) => {
+                setTimeout(() => {
+                    const jobCard = createJobCard(job);
+                    container.appendChild(jobCard);
+                }, index * 50); // Stagger animation
             });
             
             if (jobs.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-full text-center py-16">
+                    <div class="col-span-full text-center py-16 fade-in">
                         <i class="fas fa-search text-7xl text-gray-300 mb-6"></i>
                         <h3 class="text-xl font-bold text-gray-500 mb-2">متأسفانه چیزی پیدا نشد!</h3>
                         <p class="text-gray-400">فیلترها رو عوض کن یا یه شغل جدید جستجو کن</p>
@@ -894,7 +1133,7 @@
 
         function createJobCard(job) {
             const card = document.createElement('div');
-            card.className = 'job-card glass-effect rounded-2xl p-4 md:p-6 fade-in hover:scale-105 transition';
+            card.className = 'job-card glass-effect rounded-2xl p-4 md:p-6 hover:shadow-xl transition cursor-pointer';
             card.dataset.jobId = job.id;
             
             const isFavorite = favorites.includes(job.id);
@@ -902,47 +1141,57 @@
             card.innerHTML = `
                 <div class="flex justify-between items-start mb-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-lg">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-lg transition hover:scale-110">
                             <i class="fas ${job.logo}"></i>
                         </div>
                         <div class="min-w-0">
-                            <h3 class="font-bold text-sm md:text-lg truncate text-gray-800 dark:text-white">${job.title}</h3>
-                            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 truncate">${job.company}</p>
+                            <h3 class="font-bold text-sm md:text-lg truncate text-gray-800 dark:text-white transition">${job.title}</h3>
+                            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 truncate transition">${job.company}</p>
                         </div>
                     </div>
-                    <button onclick="toggleFavoriteJob(${job.id}); event.stopPropagation();" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isFavorite ? 'text-red-500' : 'text-gray-400'}" aria-label="Toggle favorite">
-                        <i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
+                    <button onclick="toggleFavoriteJob(${job.id}); event.stopPropagation();" 
+                            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isFavorite ? 'text-red-500' : 'text-gray-400'}" 
+                            aria-label="${isFavorite ? 'حذف از' : 'افزودن به'} علاقه‌مندی‌ها">
+                        <i class="${isFavorite ? 'fas' : 'far'} fa-heart transition"></i>
                     </button>
                 </div>
 
                 <div class="flex flex-wrap gap-2 mb-4">
-                    <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded flex items-center gap-1 text-gray-600 dark:text-gray-300">
+                    <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded flex items-center gap-1 text-gray-600 dark:text-gray-300 transition">
                         <i class="fas fa-map-marker-alt"></i>${job.location}
                     </span>
-                    <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">${job.type}</span>
-                    <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded font-semibold">${job.salary}</span>
+                    <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300 transition">${job.type}</span>
+                    <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded font-semibold transition">${job.salary}</span>
                 </div>
 
-                <p class="text-gray-600 dark:text-gray-300 text-xs md:text-sm mb-4 line-clamp-3 leading-relaxed">${job.description}</p>
+                <p class="text-gray-600 dark:text-gray-300 text-xs md:text-sm mb-4 line-clamp-3 leading-relaxed transition">${job.description}</p>
 
                 <div class="flex flex-wrap gap-2 mb-4">
                     ${job.requirements.slice(0, 3).map(req => 
-                        `<span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded">${req}</span>`
+                        `<span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded transition hover:bg-blue-200 dark:hover:bg-blue-800">${req}</span>`
                     ).join('')}
                 </div>
 
                 <div class="flex justify-between items-center">
                     <div class="flex items-center gap-2">
                         <span class="text-xs md:text-sm font-bold text-primary-600 dark:text-primary-400">${job.match}% تطابق</span>
-                        <div class="w-10 h-1 bg-gray-200 rounded">
-                            <div class="h-full bg-gradient-to-r from-primary-600 to-purple-600 rounded" style="width: ${job.match}%"></div>
+                        <div class="w-10 h-1 bg-gray-200 rounded overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-600 to-purple-600 rounded transition-all duration-500" style="width: ${job.match}%"></div>
                         </div>
                     </div>
-                    <button onclick="showJobDetail(${job.id})" class="btn-primary text-white px-4 py-2 rounded-lg text-xs md:text-sm whitespace-nowrap">
+                    <button onclick="showJobDetail(${job.id})" class="btn-primary text-white px-4 py-2 rounded-lg text-xs md:text-sm whitespace-nowrap hover:shadow-md transition">
                         جزئیات <i class="fas fa-arrow-left ml-1"></i>
                     </button>
                 </div>
             `;
+            
+            // Add click handler to whole card
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('button')) {
+                    showJobDetail(job.id);
+                }
+            });
+            
             return card;
         }
 
@@ -982,6 +1231,10 @@
             renderJobs(filtered, 'jobsPageContainer');
         }
 
+        function filterJobs() {
+            searchJobs(); // Reuse search logic
+        }
+
         function loadMoreJobs() {
             // Simulate loading more jobs
             const moreJobs = mockJobs.map(job => ({...job, id: job.id + 1000, title: job.title + ' (جدید)'}));
@@ -990,9 +1243,16 @@
             
             // Show notification
             showNotification('۱۰ فرصت شغلی جدید اضافه شد!', 'info');
+            
+            // Simulate loading
+            const spinner = document.getElementById('loadingSpinner');
+            if (spinner) {
+                spinner.classList.remove('hidden');
+                setTimeout(() => spinner.classList.add('hidden'), 500);
+            }
         }
 
-        // ==================== JOB DETAIL ====================
+        // ======== JOB DETAIL ========
         function showJobDetail(jobId) {
             const job = mockJobs.find(j => j.id === jobId);
             if (!job) return;
@@ -1000,11 +1260,11 @@
             currentJob = job;
             const isFavorite = favorites.includes(job.id);
             
-            document.getElementById('modalJobTitle').textContent = job.title;
+            document.getElementById('jobDetailTitle').textContent = job.title;
             document.getElementById('modalJobContent').innerHTML = `
                 <div class="mb-6">
                     <div class="flex flex-col md:flex-row items-start md:items-center gap-4 mb-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-2xl">
+                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-2xl transition hover:scale-110">
                             <i class="fas ${job.logo}"></i>
                         </div>
                         <div>
@@ -1041,27 +1301,14 @@
                     </h5>
                     <div class="flex flex-wrap gap-2">
                         ${job.requirements.map(req => 
-                            `<span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">${req}</span>`
+                            `<span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium transition hover:bg-blue-200 dark:hover:bg-blue-800">${req}</span>`
                         ).join('')}
                     </div>
                 </div>
 
-                <div class="mb-6">
-                    <h5 class="font-bold mb-3 text-lg flex items-center gap-2">
-                        <i class="fas fa-chart-line text-emerald-600"></i>
-                        چرا اینجا کار کنی؟
-                    </h5>
-                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-                        <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> حقوق و مزایای رقابتی</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> محیط کاری دوستانه و پویا</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> فرصت رشد حرفه‌ای</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> بیمه و مزایا کامل</li>
-                    </ul>
-                </div>
-
                 <div class="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-xl p-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center text-primary-600">
+                        <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center text-primary-600 transition">
                             <i class="fas fa-lightbulb"></i>
                         </div>
                         <div>
@@ -1074,23 +1321,103 @@
             
             // Update favorite button
             const favBtn = document.getElementById('favoriteBtn');
-            favBtn.innerHTML = `<i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i> ${isFavorite ? 'حذف از' : 'ذخیره در'} علاقه‌مندی‌ها`;
+            if (favBtn) {
+                favBtn.innerHTML = `<i class="${isFavorite ? 'fas' : 'far'} fa-heart ml-1"></i> ${isFavorite ? 'حذف از' : 'ذخیره در'} علاقه‌مندی‌ها`;
+            }
             
             document.getElementById('jobDetailModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
 
         function closeJobModal() {
-            document.getElementById('jobDetailModal').classList.add('hidden');
-            document.body.style.overflow = '';
-            currentJob = null;
+            const modal = document.getElementById('jobDetailModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+                currentJob = null;
+            }
         }
 
-        // ==================== AUTH FUNCTIONS ====================
+        function applyForJob() {
+            if (!currentJob) return;
+            
+            // Show loading
+            const button = document.querySelector('#jobDetailModal button:nth-of-type(1)');
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin ml-2"></i> در حال ارسال...';
+                button.disabled = true;
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 1500);
+            }
+            
+            showNotification(`درخواست شما برای موقعیت "${currentJob.title}" با موفقیت ارسال شد!`, 'success');
+            
+            // Add to dashboard
+            setTimeout(() => {
+                const container = document.getElementById('recentApplications');
+                if (container) {
+                    const newApp = document.createElement('div');
+                    newApp.className = 'glass-effect rounded-xl p-4 flex items-center justify-between fade-in';
+                    newApp.innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">${currentJob.title}</h4>
+                                <p class="text-sm text-gray-500">${currentJob.company}</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full text-xs font-bold">جدید</span>
+                            <p class="text-xs text-gray-500 mt-1">امروز</p>
+                        </div>
+                    `;
+                    container.prepend(newApp);
+                }
+                closeJobModal();
+            }, 1500);
+        }
+
+        function toggleFavoriteJob(jobId) {
+            const isFavorite = favorites.includes(jobId);
+            
+            if (isFavorite) {
+                favorites = favorites.filter(id => id !== jobId);
+                showNotification('از لیست علاقه‌مندی‌ها حذف شد', 'info');
+            } else {
+                favorites.push(jobId);
+                showNotification('به لیست علاقه‌مندی‌ها اضافه شد', 'success');
+            }
+            
+            localStorage.setItem('karsaz_favorites', JSON.stringify(favorites));
+            renderJobs(currentJobs);
+            
+            // Update modal button if open
+            if (currentJob && currentJob.id === jobId) {
+                const favBtn = document.getElementById('favoriteBtn');
+                if (favBtn) {
+                    favBtn.innerHTML = `<i class="${!isFavorite ? 'fas' : 'far'} fa-heart ml-1"></i> ${!isFavorite ? 'حذف از' : 'ذخیره در'} علاقه‌مندی‌ها`;
+                }
+            }
+        }
+
+        // ======== AUTH FUNCTIONS ========
         function handleLogin(event) {
             event.preventDefault();
             const form = event.target;
-            const email = form.querySelector('input[type="text"]').value;
+            const email = form.querySelector('#login-email').value;
+            const password = form.querySelector('#login-password').value;
+            
+            // Validation
+            if (!email || !password) {
+                showNotification('لطفاً تمام فیلدها را پر کنید', 'error');
+                return;
+            }
             
             // Simulate login
             currentUser = { email, name: email.split('@')[0] };
@@ -1104,11 +1431,24 @@
         function handleSignup(event) {
             event.preventDefault();
             const form = event.target;
-            const name = form.querySelector('input[type="text"]').value;
-            const email = form.querySelector('input[type="email"]').value;
+            const name = form.querySelector('#signup-name').value;
+            const email = form.querySelector('#signup-email').value;
+            const phone = form.querySelector('#signup-phone').value;
+            const password = form.querySelector('#signup-password').value;
+            
+            // Validation
+            if (!name || !email || !phone || !password) {
+                showNotification('لطفاً تمام فیلدها را پر کنید', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('رمز عبور باید حداقل ۶ کاراکتر باشد', 'error');
+                return;
+            }
             
             // Simulate signup
-            currentUser = { email, name };
+            currentUser = { email, name, phone };
             localStorage.setItem('karsaz_user', JSON.stringify(currentUser));
             
             updateUIForLoggedInUser();
@@ -1117,32 +1457,38 @@
         }
 
         function updateUIForLoggedInUser() {
-            // Update UI elements for logged in user
+            // Update navigation buttons
             const loginBtns = document.querySelectorAll('[onclick*="login"]');
             const signupBtns = document.querySelectorAll('[onclick*="signup"]');
             
             loginBtns.forEach(btn => {
-                btn.innerHTML = '<i class="fas fa-user"></i> پروفایل';
-                btn.onclick = () => navigateTo('dashboard');
+                if (btn.tagName === 'BUTTON') {
+                    btn.innerHTML = '<i class="fas fa-user ml-2"></i> پروفایل';
+                    btn.onclick = () => navigateTo('dashboard');
+                }
             });
             
             signupBtns.forEach(btn => {
-                btn.innerHTML = '<i class="fas fa-sign-out-alt"></i> خروج';
-                btn.onclick = () => {
-                    localStorage.removeItem('karsaz_user');
-                    location.reload();
-                };
+                if (btn.tagName === 'BUTTON') {
+                    btn.innerHTML = '<i class="fas fa-sign-out-alt ml-2"></i> خروج';
+                    btn.onclick = () => {
+                        localStorage.removeItem('karsaz_user');
+                        location.reload();
+                    };
+                }
             });
         }
 
-        // ==================== DASHBOARD ====================
+        // ======== DASHBOARD ========
         function loadDashboard() {
             const content = document.getElementById('dashboardContent');
+            if (!content) return;
+            
             content.innerHTML = `
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold gradient-text">درخواست‌های اخیر</h2>
-                    <button onclick="navigateTo('jobs')" class="btn-primary text-white px-4 py-2 rounded-lg text-sm">
-                        فرصت جدید <i class="fas fa-plus mr-1"></i>
+                    <button onclick="navigateTo('jobs')" class="btn-primary text-white px-4 py-2 rounded-lg text-sm hover:shadow-md transition">
+                        فرصت جدید <i class="fas fa-plus ml-2"></i>
                     </button>
                 </div>
                 <div class="space-y-4" id="recentApplications">
@@ -1154,16 +1500,18 @@
 
         function loadApplications() {
             const container = document.getElementById('recentApplications');
+            if (!container) return;
+            
             const applications = [
-                { title: 'توسعه‌دهنده Full Stack', company: 'شرکت فناوری اطلاعات سپهر', status: 'در انتظار', date: '۱۴۰۳/۰۹/۰۵' },
-                { title: 'طراح UI/UX', company: 'استودیو دیزاین پلاس', status: 'بررسی شده', date: '۱۴۰۳/۰۹/۰۳' },
-                { title: 'تحلیل‌گر داده', company: 'مرکز داده هوشمند', status: 'رد شده', date: '۱۴۰۳/۰۸/۲۸' }
+                { title: 'توسعه‌دهنده Full Stack', company: 'شرکت فناوری اطلاعات سپهر', status: 'در انتظار', date: '۱۴۰۳/۰۹/۰۵', color: 'yellow' },
+                { title: 'طراح UI/UX', company: 'استودیو دیزاین پلاس', status: 'بررسی شده', date: '۱۴۰۳/۰۹/۰۳', color: 'blue' },
+                { title: 'تحلیل‌گر داده', company: 'مرکز داده هوشمند', status: 'رد شده', date: '۱۴۰۳/۰۸/۲۸', color: 'red' }
             ];
             
             container.innerHTML = applications.map(app => `
-                <div class="glass-effect rounded-xl p-4 flex items-center justify-between">
+                <div class="glass-effect rounded-xl p-4 flex items-center justify-between transition hover:shadow-md">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white transition">
                             <i class="fas fa-briefcase"></i>
                         </div>
                         <div>
@@ -1172,45 +1520,253 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <span class="px-3 py-1 rounded-full text-xs font-medium ${
-                            app.status === 'در انتظار' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' :
-                            app.status === 'بررسی شده' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' :
-                            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                        }">${app.status}</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-${app.color}-100 text-${app.color}-800 dark:bg-${app.color}-900 dark:text-${app.color}-300">
+                            ${app.status}
+                        </span>
                         <p class="text-xs text-gray-500 mt-1">${app.date}</p>
                     </div>
                 </div>
             `).join('');
         }
 
-        // ==================== NOTIFICATIONS ====================
+        function showDashboardSection(section) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.dashboard-nav-item').forEach(item => {
+                item.classList.remove('bg-primary-600', 'text-white');
+                item.classList.add('hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            });
+            
+            // Add active class to clicked item
+            event.target.closest('.dashboard-nav-item')?.classList.add('bg-primary-600', 'text-white');
+            event.target.closest('.dashboard-nav-item')?.classList.remove('hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            
+            // Load section content
+            const content = document.getElementById('dashboardContent');
+            if (!content) return;
+            
+            // Simulate loading
+            content.innerHTML = '<div class="text-center py-8"><div class="loading-spinner mx-auto"></div><p class="mt-4 text-gray-500">در حال بارگذاری...</p></div>';
+            
+            setTimeout(() => {
+                switch(section) {
+                    case 'applications':
+                        loadApplications();
+                        break;
+                    case 'favorites':
+                        showFavoriteJobs();
+                        break;
+                    case 'resume':
+                        showResumeSection();
+                        break;
+                    case 'tests':
+                        showTestsSection();
+                        break;
+                }
+            }, 300);
+        }
+
+        function showFavoriteJobs() {
+            const content = document.getElementById('dashboardContent');
+            const favoriteJobs = mockJobs.filter(job => favorites.includes(job.id));
+            
+            if (favoriteJobs.length === 0) {
+                content.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-heart text-6xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-bold text-gray-500 mb-2">هنوز شغل مورد علاقه‌ای نداری!</h3>
+                        <p class="text-gray-400 mb-4">برو سراغ فرصت‌ها و شغل‌های جذاب رو ذخیره کن</p>
+                        <button onclick="navigateTo('jobs')" class="btn-primary text-white px-6 py-3 rounded-lg">برو به فرصت‌ها</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            content.innerHTML = `
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold gradient-text">شغل‌های مورد علاقه تو</h2>
+                    <p class="text-gray-600 dark:text-gray-400">${favoriteJobs.length} فرصت شغلی ذخیره شده</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${favoriteJobs.map(job => `
+                        <div class="glass-effect rounded-xl p-4 transition hover:shadow-md cursor-pointer" onclick="showJobDetail(${job.id})">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold">${job.title}</h4>
+                                <span class="text-primary-600 font-bold">${job.match}%</span>
+                            </div>
+                            <p class="text-sm text-gray-500">${job.company}</p>
+                            <p class="text-xs text-gray-400 mt-2">${job.location} • ${job.type}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function showResumeSection() {
+            const content = document.getElementById('dashboardContent');
+            content.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold gradient-text mb-4">رزومه من</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">رزومه‌ات رو آپلود کن تا تحلیل هوشمند بشه</p>
+                    <button onclick="showResumeModal()" class="btn-primary text-white px-6 py-3 rounded-lg hover:shadow-lg transition">
+                        <i class="fas fa-upload ml-2"></i> آپلود رزومه
+                    </button>
+                </div>
+            `;
+        }
+
+        function showTestsSection() {
+            const content = document.getElementById('dashboardContent');
+            content.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold gradient-text mb-4">آزمون‌های من</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">هنوز هیچ آزمونی ندادی! شروع کن و مهارت‌هات رو محک بزن</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                        <div class="glass-effect p-4 rounded-xl transition hover:shadow-md cursor-pointer" onclick="showNotification('آزمون به زودی در دسترس خواهد بود!', 'info')">
+                            <i class="fas fa-code text-2xl text-blue-600 mb-2"></i>
+                            <h4 class="font-bold">آزمون برنامه‌نویسی</h4>
+                            <p class="text-sm text-gray-500">۲۰ سوال • ۳۰ دقیقه</p>
+                        </div>
+                        <div class="glass-effect p-4 rounded-xl transition hover:shadow-md cursor-pointer" onclick="showNotification('آزمون به زودی در دسترس خواهد بود!', 'info')">
+                            <i class="fas fa-palette text-2xl text-purple-600 mb-2"></i>
+                            <h4 class="font-bold">آزمون طراحی</h4>
+                            <p class="text-sm text-gray-500">۱۵ سوال • ۲۰ دقیقه</p>
+                        </div>
+                        <div class="glass-effect p-4 rounded-xl transition hover:shadow-md cursor-pointer" onclick="showNotification('آزمون به زودی در دسترس خواهد بود!', 'info')">
+                            <i class="fas fa-chart-bar text-2xl text-green-600 mb-2"></i>
+                            <h4 class="font-bold">آزمون تحلیل داده</h4>
+                            <p class="text-sm text-gray-500">۲۵ سوال • ۴۰ دقیقه</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ======== RESUME UPLOAD ========
+        function showResumeModal() {
+            const modal = document.getElementById('resumeModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeResumeModal() {
+            const modal = document.getElementById('resumeModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+                
+                // Reset form
+                const fileInput = document.getElementById('resumeFile');
+                if (fileInput) fileInput.value = '';
+                
+                const fileName = document.getElementById('resumeFileName');
+                if (fileName) {
+                    fileName.classList.add('hidden');
+                    fileName.textContent = '';
+                }
+            }
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            const fileNameEl = document.getElementById('resumeFileName');
+            
+            if (file && fileNameEl) {
+                fileNameEl.textContent = `فایل انتخاب شده: ${file.name}`;
+                fileNameEl.classList.remove('hidden');
+            }
+        }
+
+        function uploadResume() {
+            const file = document.getElementById('resumeFile').files[0];
+            if (!file) {
+                showNotification('لطفاً یک فایل انتخاب کنید', 'error');
+                return;
+            }
+            
+            // Show loading
+            const button = document.querySelector('#resumeModal .btn-primary');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-spinner fa-spin ml-2"></i> در حال آپلود...';
+                button.disabled = true;
+            }
+            
+            // Simulate upload
+            setTimeout(() => {
+                closeResumeModal();
+                showNotification('رزومه شما با موفقیت آپلود و تحلیل شد!', 'success');
+                
+                // Update recommendations
+                setTimeout(() => {
+                    currentJobs = [...mockJobs].sort(() => Math.random() - 0.5);
+                    renderJobs(currentJobs);
+                    showNotification('پیشنهادهای شغلی بر اساس رزومه شما به‌روزرسانی شد', 'info');
+                }, 1000);
+                
+                // Reset button
+                if (button) {
+                    button.innerHTML = 'آپلود و تحلیل';
+                    button.disabled = false;
+                }
+            }, 2000);
+        }
+
+        // ======== NOTIFICATIONS ========
         function showNotification(message, type = 'info') {
             const notification = document.getElementById('notification');
             const messageEl = document.getElementById('notificationMessage');
             const icon = notification.querySelector('i');
             
-            const iconClass = {
+                        const iconClass = {
                 success: 'fa-check-circle',
                 error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            }[type];
+                info: 'fa-info-circle',
+                warning: 'fa-exclamation-triangle'
+            };
             
-            icon.className = `fas ${iconClass} text-xl`;
+            // Update icon based on type
+            icon.className = `fas ${iconClass[type] || iconClass.info} text-xl`;
+            
+            // Update message
             messageEl.textContent = message;
             
+            // Apply type-specific styling
+            const typeStyles = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            // Remove existing color classes and apply new one
+            const notificationDiv = notification.querySelector('div');
+            Object.values(typeStyles).forEach(style => notificationDiv.classList.remove(style));
+            notificationDiv.classList.add(typeStyles[type] || typeStyles.info);
+            
+            // Show notification with animation
             notification.classList.remove('hidden');
             
+            // Auto-hide after 5 seconds
             setTimeout(() => {
-                notification.classList.add('hidden');
+                hideNotification();
             }, 5000);
         }
 
         function hideNotification() {
-            document.getElementById('notification').classList.add('hidden');
+            const notification = document.getElementById('notification');
+            if (notification) {
+                notification.classList.add('hidden');
+            }
         }
 
-        // ==================== UTILITY FUNCTIONS ====================
+        // ======== UTILITY FUNCTIONS ========
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -1223,33 +1779,176 @@
             };
         }
 
-        // Close modals on outside click
-        window.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fixed') && e.target.id.includes('Modal')) {
-                closeJobModal();
-                closeResumeModal();
-            }
-        });
+        // ======== PWA SERVICE WORKER ========
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
+                self.addEventListener('install', (e) => {
+                    e.waitUntil(
+                        caches.open('karsaz-v1').then((cache) => {
+                            return cache.addAll(['/']);
+                        })
+                    );
+                });
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeJobModal();
-                closeResumeModal();
-                hideNotification();
-            }
-        });
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(
+                        caches.match(e.request).then((response) => {
+                            return response || fetch(e.request);
+                        })
+                    );
+                });
 
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                self.addEventListener('activate', (e) => {
+                    e.waitUntil(
+                        caches.keys().then((names) => {
+                            return Promise.all(
+                                names.map((name) => {
+                                    if (name !== 'karsaz-v1') {
+                                        return caches.delete(name);
+                                    }
+                                })
+                            );
+                        })
+                    );
+                });
+            `)).then((registration) => {
+                console.log('ServiceWorker registration successful');
+            }).catch((error) => {
+                console.log('ServiceWorker registration failed');
+            });
+        }
+
+        // ======== PERFORMANCE MONITORING ========
+        if ('PerformanceObserver' in window) {
+            const observer = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    console.log(`Performance: ${entry.name} - ${entry.duration}ms`);
                 }
             });
+            observer.observe({ entryTypes: ['measure', 'navigation'] });
+        }
+
+        // ======== ERROR HANDLING ========
+        window.addEventListener('error', (e) => {
+            console.error('JavaScript Error:', e.error);
+            showNotification('متأسفانه خطایی رخ داده است. لطفاً صفحه را مجدداً بارگذاری کنید.', 'error');
         });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            console.error('Unhandled Promise Rejection:', e.reason);
+            showNotification('خطا در پردازش درخواست. لطفاً دوباره تلاش کنید.', 'error');
+        });
+
+        // ======== ANALYTICS & TRACKING ========
+        const trackEvent = (eventName, properties = {}) => {
+            console.log('Analytics Event:', eventName, properties);
+            // In production, integrate with Google Analytics, Mixpanel, etc.
+        };
+
+        // Track page views
+        document.addEventListener('pageChange', (e) => {
+            trackEvent('page_view', { page: e.detail.page });
+        });
+
+        // Track job interactions
+        const trackJobInteraction = (action, jobId) => {
+            trackEvent('job_interaction', { action, jobId });
+        };
+
+        // ======== A/B TESTING ========
+        const getVariant = (experimentName) => {
+            const variants = ['control', 'variant_a', 'variant_b'];
+            const randomIndex = Math.floor(Math.random() * variants.length);
+            return variants[randomIndex];
+        };
+
+        // Apply A/B test variants
+        const applyABTest = () => {
+            const heroVariant = getVariant('hero_section');
+            const hero = document.querySelector('#homePage section');
+            if (hero) {
+                hero.classList.add(`variant-${heroVariant}`);
+            }
+        };
+
+        // Initialize A/B testing
+        applyABTest();
+
+        // ======== ACCESSIBILITY ENHANCEMENTS ========
+        // Add keyboard navigation for job cards
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                const focusedElement = document.activeElement;
+                if (focusedElement.classList.contains('job-card')) {
+                    focusedElement.style.outline = '2px solid #6366f1';
+                }
+            }
+        });
+
+        // Add ARIA live region for dynamic content
+        const createLiveRegion = () => {
+            const liveRegion = document.createElement('div');
+            liveRegion.setAttribute('role', 'status');
+            liveRegion.setAttribute('aria-live', 'polite');
+            liveRegion.setAttribute('aria-atomic', 'true');
+            liveRegion.className = 'sr-only';
+            liveRegion.id = 'live-region';
+            document.body.appendChild(liveRegion);
+        };
+
+        createLiveRegion();
+
+        const announceToScreenReader = (message) => {
+            const liveRegion = document.getElementById('live-region');
+            if (liveRegion) {
+                liveRegion.textContent = message;
+            }
+        };
+
+        // ======== LAZY LOADING IMAGES ========
+        const lazyLoadImages = () => {
+            const images = document.querySelectorAll('img[data-src]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('img-loading');
+                        img.classList.add('img-loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(img => imageObserver.observe(img));
+        };
+
+        // Initialize lazy loading
+        lazyLoadImages();
+
+        // ======== OFFLINE DETECTION ========
+        const handleOffline = () => {
+            showNotification('شما آفلاین هستید. برخی از قابلیت‌ها ممکن است محدود باشند.', 'warning');
+        };
+
+        const handleOnline = () => {
+            showNotification('اتصال به اینترنت برقرار شد!', 'success');
+        };
+
+        window.addEventListener('offline', handleOffline);
+        window.addEventListener('online', handleOnline);
+
+        // ======== FINAL INITIALIZATION ========
+        // Track initial load
+        trackEvent('app_initialization', {
+            user_agent: navigator.userAgent,
+            screen_size: `${window.innerWidth}x${window.innerHeight}`,
+            dark_mode: document.documentElement.classList.contains('dark')
+        });
+
+        // Announce to screen readers
+        announceToScreenReader('پلتفرم کاریابی کارساز بارگذاری شد');
+
     </script>
 </body>
 </html>
